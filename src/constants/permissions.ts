@@ -1,9 +1,11 @@
 export const PERMISSIONS = {
   ADMIN_DASHBOARD_READ: "admin.dashboard.read",
   PENTEST_DASHBOARD_READ: "pentest.dashboard.read",
+  SECURITY_MANAGER_DASHBOARD_READ: "security-manager.dashboard.read",
   DEVOPS_DASHBOARD_READ: "devops.dashboard.read",
   REPRESENTATIVE_DASHBOARD_READ: "representative.dashboard.read",
   QA_DASHBOARD_READ: "qa.dashboard.read",
+  QUALITY_MANAGER_DASHBOARD_READ: "quality-manager.dashboard.read",
 
   USERS_READ: "users.read",
   USERS_CREATE: "users.create",
@@ -16,6 +18,15 @@ export const PERMISSIONS = {
   VULNERABILITIES_DELETE: "vulnerabilities.delete",
   REPORTS_EXPORT: "reports.export",
 
+  SECURITY_PROJECTS_READ: "security-projects.read",
+  SECURITY_PROJECTS_ASSIGN: "security-projects.assign",
+  SECURITY_PROJECTS_ASSIGN_SELF: "security-projects.assign-self",
+  SECURITY_FINDINGS_REVIEW: "security-findings.review",
+  SECURITY_FINDINGS_APPROVE: "security-findings.approve",
+  SECURITY_FINDINGS_REJECT: "security-findings.reject",
+  SECURITY_REPORTS_CREATE: "security-reports.create",
+  SECURITY_REPORTS_SUBMIT_FOR_APPROVAL: "security-reports.submit-for-approval",
+
   DEPLOYMENTS_READ: "deployments.read",
   DEPLOYMENTS_CREATE: "deployments.create",
   SERVERS_READ: "servers.read",
@@ -27,4 +38,13 @@ export const PERMISSIONS = {
   QA_TEST_CASES_READ: "qa.testcases.read",
   QA_TEST_CASES_CREATE: "qa.testcases.create",
   QA_TEST_CASES_UPDATE: "qa.testcases.update",
+
+  QUALITY_PROJECTS_READ: "quality-projects.read",
+  QUALITY_PROJECTS_ASSIGN: "quality-projects.assign",
+  QUALITY_PROJECTS_ASSIGN_SELF: "quality-projects.assign-self",
+  QUALITY_RESULTS_REVIEW: "quality-results.review",
+  QUALITY_RESULTS_APPROVE: "quality-results.approve",
+  QUALITY_RESULTS_REJECT: "quality-results.reject",
+  QUALITY_REPORTS_CREATE: "quality-reports.create",
+  QUALITY_REPORTS_SUBMIT_FOR_APPROVAL: "quality-reports.submit-for-approval",
 };

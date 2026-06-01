@@ -10,19 +10,37 @@ import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
 import { renderWithProviders } from "@/test/renderWithProviders";
-import { adminAuthState, qaAuthState } from "@/test/testUsers";
+import { adminAuthState, qaAuthState, securityProjectManagerAuthState } from "@/test/testUsers";
 
 describe("permission mapping", () => {
   it("admin receives all permissions", () => {
     const permissions = getPermissionsFromRoles([ROLES.ADMIN]);
     expect(permissions).toContain(PERMISSIONS.USERS_DELETE);
     expect(permissions).toContain(PERMISSIONS.QA_DASHBOARD_READ);
+    expect(permissions).toContain(PERMISSIONS.SECURITY_REPORTS_SUBMIT_FOR_APPROVAL);
+    expect(permissions).toContain(PERMISSIONS.QUALITY_REPORTS_SUBMIT_FOR_APPROVAL);
   });
 
   it("multi-role users receive merged permissions", () => {
     const permissions = getPermissionsFromRoles([ROLES.PENTESTER, ROLES.QA]);
     expect(permissions).toContain(PERMISSIONS.PENTEST_DASHBOARD_READ);
     expect(permissions).toContain(PERMISSIONS.QA_DASHBOARD_READ);
+  });
+
+  it("security project managers can assign work and review findings", () => {
+    const permissions = getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]);
+    expect(permissions).toContain(PERMISSIONS.SECURITY_PROJECTS_ASSIGN);
+    expect(permissions).toContain(PERMISSIONS.SECURITY_PROJECTS_ASSIGN_SELF);
+    expect(permissions).toContain(PERMISSIONS.SECURITY_FINDINGS_APPROVE);
+    expect(permissions).toContain(PERMISSIONS.SECURITY_FINDINGS_REJECT);
+  });
+
+  it("quality project managers can assign work and review results", () => {
+    const permissions = getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]);
+    expect(permissions).toContain(PERMISSIONS.QUALITY_PROJECTS_ASSIGN);
+    expect(permissions).toContain(PERMISSIONS.QUALITY_PROJECTS_ASSIGN_SELF);
+    expect(permissions).toContain(PERMISSIONS.QUALITY_RESULTS_APPROVE);
+    expect(permissions).toContain(PERMISSIONS.QUALITY_RESULTS_REJECT);
   });
 });
 
@@ -94,6 +112,12 @@ describe("permission UI", () => {
   it("Sidebar only shows links allowed by current permissions", () => {
     renderWithProviders(<Sidebar />, { preloadedState: { auth: qaAuthState, ui: { sidebarOpen: true, theme: "light" } } });
     expect(screen.getByText("QA Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
+  });
+
+  it("Sidebar shows the security manager dashboard for security project managers", () => {
+    renderWithProviders(<Sidebar />, { preloadedState: { auth: securityProjectManagerAuthState, ui: { sidebarOpen: true, theme: "light" } } });
+    expect(screen.getByText("Security Manager Dashboard")).toBeInTheDocument();
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
   });
 });

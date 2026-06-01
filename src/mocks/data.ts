@@ -27,10 +27,26 @@ export let mockUsers: User[] = [
     permissions: getPermissionsFromRoles([ROLES.DEVOPS]),
     avatarUrl: "https://placehold.co/128x128?text=DU",
   },
+  {
+    id: "4",
+    name: "Security Project Manager",
+    email: "security.pm@example.com",
+    roles: [ROLES.SECURITY_PROJECT_MANAGER],
+    permissions: getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]),
+    avatarUrl: "https://placehold.co/128x128?text=SPM",
+  },
+  {
+    id: "5",
+    name: "Quality Project Manager",
+    email: "quality.pm@example.com",
+    roles: [ROLES.QUALITY_PROJECT_MANAGER],
+    permissions: getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]),
+    avatarUrl: "https://placehold.co/128x128?text=QPM",
+  },
 ];
 
 export function resetMockUsers() {
-  mockUsers = mockUsers.slice(0, 3);
+  mockUsers = mockUsers.slice(0, 5);
 }
 
 export function upsertMockUser(user: User) {

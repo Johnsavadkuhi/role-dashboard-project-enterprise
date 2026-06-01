@@ -78,9 +78,11 @@ export default function Login() {
 
         <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.ADMIN])}>Admin</Button>
+          <Button variant="secondary" onClick={() => loginAsDemo([ROLES.SECURITY_PROJECT_MANAGER])}>Security PM</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.PENTESTER])}>Pentester</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.DEVOPS])}>DevOps</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.REPRESENTATIVE])}>Representative</Button>
+          <Button variant="secondary" onClick={() => loginAsDemo([ROLES.QUALITY_PROJECT_MANAGER])}>Quality PM</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.QA])}>QA</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.PENTESTER, ROLES.QA])}>Pentester + QA</Button>
           <Button variant="secondary" onClick={() => loginAsDemo(Object.values(ROLES) as Role[])}>All Roles</Button>
