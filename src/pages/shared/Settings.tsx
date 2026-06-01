@@ -10,10 +10,10 @@ export default function Settings() {
   const { theme } = useSelector((state: RootState) => state.ui);
 
   return (
-    <VStack align="stretch" spacing={5}>
+    <VStack align="stretch" gap={5}>
       <Heading>Settings</Heading>
       <Card title="Theme State Example">
-        <VStack align="start" spacing={3}>
+        <VStack align="start" gap={3}>
           <Text>Current theme: {theme}</Text>
           <Button variant="secondary" onClick={() => dispatch(setTheme(theme === "light" ? "dark" : "light"))}>Toggle Theme</Button>
         </VStack>

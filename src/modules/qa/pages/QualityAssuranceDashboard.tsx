@@ -10,7 +10,7 @@ export default function QualityAssuranceDashboard() {
   const { data: testCases = [] } = useGetTestCasesQuery(undefined, { skip: true });
 
   return (
-    <VStack align="stretch" spacing={5}>
+    <VStack align="stretch" gap={5}>
       <HStack justify="space-between" flexWrap="wrap">
         <div>
           <Heading>Quality Assurance Dashboard</Heading>

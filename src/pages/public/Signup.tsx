@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
-import { Box, FormControl, FormErrorMessage, FormLabel, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Field, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { useRegisterUserMutation } from "@/services/authApi";
 import { useUploadFileMutation } from "@/services/uploadApi";
@@ -67,20 +67,20 @@ export default function Signup() {
 
   return (
     <Box bg="white" border="1px solid" borderColor="gray.200" borderRadius="2xl" boxShadow="xl" p={{ base: 6, md: 8 }}>
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" gap={6}>
         <Box>
           <Heading size="lg">Create Account</Heading>
           <Text color="gray.600" mt={2}>Signup uploads avatar first, then sends user data to the register API.</Text>
         </Box>
 
-        <VStack as="form" onSubmit={handleSubmit(onSubmit)} align="stretch" spacing={4}>
+        <VStack as="form" onSubmit={handleSubmit(onSubmit)} align="stretch" gap={4}>
           <Input label="Name" {...register("name")} error={errors.name?.message} />
           <Input label="Email" type="email" {...register("email")} error={errors.email?.message} />
           <Input label="Password" type="password" {...register("password")} error={errors.password?.message} />
 
-          <FormControl isInvalid={Boolean(errors.roles)}>
-            <FormLabel>Roles</FormLabel>
-            <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3}>
+          <Field.Root invalid={Boolean(errors.roles)}>
+            <Field.Label>Roles</Field.Label>
+            <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
               {Object.values(ROLES).map((role) => (
                 <Box
                   as="label"
@@ -100,8 +100,8 @@ export default function Signup() {
                 </Box>
               ))}
             </SimpleGrid>
-            {errors.roles && <FormErrorMessage>{errors.roles.message}</FormErrorMessage>}
-          </FormControl>
+            {errors.roles && <Field.ErrorText>{errors.roles.message}</Field.ErrorText>}
+          </Field.Root>
 
           <Input label="Avatar Image" type="file" accept="image/png,image/jpeg,image/webp" {...register("avatar")} error={errors.avatar?.message as string | undefined} />
 

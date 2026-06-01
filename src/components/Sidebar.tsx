@@ -16,20 +16,19 @@ export default function Sidebar() {
   return (
     <Box as="aside" w={{ base: "full", md: "280px" }} bg="gray.900" color="white" p={6} minH={{ base: "auto", md: "100vh" }}>
       <Heading as="h2" size="md" mb={6}>Security Platform</Heading>
-      <VStack as="nav" align="stretch" spacing={2}>
+      <VStack as="nav" align="stretch" gap={2}>
         {visibleItems.map((item) => (
           <ChakraLink
-            as={NavLink}
+            asChild
             key={item.path}
-            to={item.path}
             px={4}
             py={3}
             borderRadius="xl"
             color="gray.300"
             _hover={{ bg: "gray.700", color: "white" }}
-            sx={{ "&.active": { background: "#1e293b", color: "white" } }}
+            css={{ "&.active": { background: "#1e293b", color: "white" } }}
           >
-            {item.title}
+            <NavLink to={item.path}>{item.title}</NavLink>
           </ChakraLink>
         ))}
       </VStack>

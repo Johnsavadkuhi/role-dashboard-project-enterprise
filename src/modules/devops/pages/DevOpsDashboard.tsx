@@ -11,7 +11,7 @@ export default function DevOpsDashboard() {
   const { data: servers = [] } = useGetServersQuery(undefined, { skip: true });
 
   return (
-    <VStack align="stretch" spacing={5}>
+    <VStack align="stretch" gap={5}>
       <HStack justify="space-between" flexWrap="wrap">
         <div>
           <Heading>DevOps Dashboard</Heading>

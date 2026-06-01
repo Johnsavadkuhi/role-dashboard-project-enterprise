@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Box, Divider, Heading, HStack, SimpleGrid, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
+import { Box, Heading, HStack, Separator, SimpleGrid, Text, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import { PERMISSIONS } from "@/constants/permissions";
 import { ROLE_LABELS, ROLES } from "@/constants/roles";
 import { getPermissionsFromRoles } from "@/constants/rolePermissions";
@@ -63,16 +63,15 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
 
   return (
     <Card title="Role & Permission Admin Management">
-      <SimpleGrid columns={{ base: 1, lg: 2 }} templateColumns={{ base: "1fr", lg: "280px 1fr" }} spacing={6}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} templateColumns={{ base: "1fr", lg: "280px 1fr" }} gap={6}>
         <Box borderRight={{ base: 0, lg: "1px solid" }} borderBottom={{ base: "1px solid", lg: 0 }} borderColor="gray.200" pr={{ base: 0, lg: 4 }} pb={{ base: 4, lg: 0 }}>
           <Heading as="h3" size="sm" mb={4}>Users</Heading>
-          <VStack align="stretch" spacing={3}>
+          <VStack align="stretch" gap={3}>
             {users.map((user) => (
               <Box
                 as="button"
                 key={user.id}
                 onClick={() => handleSelectUser(user.id)}
-                type="button"
                 textAlign="left"
                 p={4}
                 border="1px solid"
@@ -89,7 +88,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
           </VStack>
         </Box>
 
-        <VStack align="stretch" spacing={6}>
+        <VStack align="stretch" gap={6}>
           <HStack justify="space-between" align="start" flexWrap="wrap">
             <Box>
               <Heading as="h3" size="md">{selectedUser.name}</Heading>
@@ -100,7 +99,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
 
           <Box>
             <Heading as="h4" size="sm" mb={3}>Roles</Heading>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
               {allRoles.map((role) => (
                 <Box as="label" key={role} display="flex" alignItems="center" gap={3} p={3} border="1px solid" borderColor="gray.200" borderRadius="xl" cursor="pointer" _hover={{ bg: "gray.50" }}>
                   <input type="checkbox" checked={draftRoles.includes(role)} onChange={() => handleToggleRole(role)} />
@@ -110,16 +109,16 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
             </SimpleGrid>
           </Box>
 
-          <Divider />
+          <Separator />
 
           <Box>
             <Heading as="h4" size="sm" mb={2}>Direct Permissions</Heading>
             <Text color="gray.600" mb={4}>Role changes auto-fill default permissions. You can still fine-tune permissions manually.</Text>
-            <VStack align="stretch" spacing={4}>
+            <VStack align="stretch" gap={4}>
               {Object.entries(groupedPermissions).map(([group, permissions]) => (
                 <Box key={group} border="1px solid" borderColor="gray.200" borderRadius="2xl" p={4}>
                   <Heading as="h5" size="xs" textTransform="capitalize" mb={3}>{group}</Heading>
-                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
                     {permissions.map((permission) => (
                       <Box as="label" key={permission} display="flex" alignItems="center" gap={3} p={2} borderRadius="lg" cursor="pointer" _hover={{ bg: "gray.50" }}>
                         <input

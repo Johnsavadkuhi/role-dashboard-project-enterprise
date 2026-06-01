@@ -3,28 +3,29 @@ import { Button as ChakraButton, type ButtonProps as ChakraButtonProps } from "@
 
 type AppButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 
-type ButtonProps = Omit<ChakraButtonProps, "variant"> & {
+type ButtonProps = Omit<ChakraButtonProps, "variant" | "loading"> & {
   variant?: AppButtonVariant;
+  isLoading?: boolean;
   children: React.ReactNode;
 };
 
 function getVariantProps(variant: AppButtonVariant): Partial<ChakraButtonProps> {
   switch (variant) {
     case "secondary":
-      return { colorScheme: "blue", variant: "subtle" };
+      return { colorPalette: "blue", variant: "subtle" };
     case "danger":
-      return { colorScheme: "red", variant: "solid" };
+      return { colorPalette: "red", variant: "solid" };
     case "ghost":
-      return { colorScheme: "gray", variant: "ghost" };
+      return { colorPalette: "gray", variant: "ghost" };
     case "primary":
     default:
-      return { colorScheme: "blue", variant: "solid" };
+      return { colorPalette: "blue", variant: "solid" };
   }
 }
 
-export default function Button({ children, variant = "primary", ...props }: ButtonProps) {
+export default function Button({ children, variant = "primary", isLoading, ...props }: ButtonProps) {
   return (
-    <ChakraButton size="md" {...getVariantProps(variant)} {...props}>
+    <ChakraButton size="md" loading={isLoading} {...getVariantProps(variant)} {...props}>
       {children}
     </ChakraButton>
   );

@@ -13,8 +13,8 @@ export default function AdminDashboard() {
   const { data: users = [], isLoading, error } = useGetUsersQuery();
 
   return (
-    <VStack align="stretch" spacing={5}>
-      <HStack justify="space-between" align="start" flexWrap="wrap" spacing={4}>
+    <VStack align="stretch" gap={5}>
+      <HStack justify="space-between" align="start" flexWrap="wrap" gap={4}>
         <div>
           <Heading>Admin Dashboard</Heading>
           <Text color="gray.600" mt={2}>Manage users, roles, and fine-grained permissions.</Text>

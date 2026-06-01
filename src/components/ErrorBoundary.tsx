@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Code, HStack, VStack } from "@chakra-ui/react";
+import { Alert, Box, Code, HStack, VStack } from "@chakra-ui/react";
 import Button from "@/components/ui/Button";
 
 type ErrorBoundaryState = {
@@ -30,20 +30,22 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
 
     return (
       <Box maxW="720px" mx="auto" mt={20} p={6}>
-        <Alert status="error" borderRadius="2xl" alignItems="flex-start" boxShadow="lg">
-          <AlertIcon />
-          <VStack align="stretch" spacing={4} w="full">
-            <Box>
-              <AlertTitle fontSize="xl">{this.props.fallbackTitle || "Something went wrong"}</AlertTitle>
-              <AlertDescription>The page crashed safely instead of breaking the whole app.</AlertDescription>
-            </Box>
-            {this.state.error?.message && <Code p={3} borderRadius="xl" whiteSpace="pre-wrap">{this.state.error.message}</Code>}
-            <HStack flexWrap="wrap">
-              <Button onClick={this.reset}>Try again</Button>
-              <Button variant="secondary" onClick={() => window.location.assign("/login")}>Go to login</Button>
-            </HStack>
-          </VStack>
-        </Alert>
+        <Alert.Root status="error" borderRadius="2xl" alignItems="flex-start" boxShadow="lg">
+          <Alert.Indicator />
+          <Alert.Content>
+            <VStack align="stretch" gap={4} w="full">
+              <Box>
+                <Alert.Title fontSize="xl">{this.props.fallbackTitle || "Something went wrong"}</Alert.Title>
+                <Alert.Description>The page crashed safely instead of breaking the whole app.</Alert.Description>
+              </Box>
+              {this.state.error?.message && <Code p={3} borderRadius="xl" whiteSpace="pre-wrap">{this.state.error.message}</Code>}
+              <HStack flexWrap="wrap">
+                <Button onClick={this.reset}>Try again</Button>
+                <Button variant="secondary" onClick={() => window.location.assign("/login")}>Go to login</Button>
+              </HStack>
+            </VStack>
+          </Alert.Content>
+        </Alert.Root>
       </Box>
     );
   }

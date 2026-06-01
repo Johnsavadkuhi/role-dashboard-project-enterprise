@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input as ChakraInput,
-  type InputProps as ChakraInputProps,
-} from "@chakra-ui/react";
+import { Field, Input as ChakraInput, type InputProps as ChakraInputProps } from "@chakra-ui/react";
 
 type InputProps = ChakraInputProps & {
   label?: string;
@@ -15,11 +9,11 @@ type InputProps = ChakraInputProps & {
 const Input = React.forwardRef<HTMLInputElement, InputProps>(({ label, error, name, id, ...props }, ref) => {
   const inputId = id || String(name || label || "input");
   return (
-    <FormControl isInvalid={Boolean(error)}>
-      {label && <FormLabel htmlFor={inputId}>{label}</FormLabel>}
+    <Field.Root invalid={Boolean(error)}>
+      {label && <Field.Label htmlFor={inputId}>{label}</Field.Label>}
       <ChakraInput id={inputId} name={name} ref={ref} borderRadius="xl" bg="white" {...props} />
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
-    </FormControl>
+      {error && <Field.ErrorText>{error}</Field.ErrorText>}
+    </Field.Root>
   );
 });
 

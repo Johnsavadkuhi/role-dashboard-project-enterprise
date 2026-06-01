@@ -10,7 +10,7 @@ export default function RepresentativeDashboard() {
   const { data: tickets = [] } = useGetTicketsQuery(undefined, { skip: true });
 
   return (
-    <VStack align="stretch" spacing={5}>
+    <VStack align="stretch" gap={5}>
       <HStack justify="space-between" flexWrap="wrap">
         <div>
           <Heading>Representative Dashboard</Heading>

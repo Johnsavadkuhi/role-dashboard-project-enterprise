@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Select as ChakraSelect,
-  type SelectProps as ChakraSelectProps,
-} from "@chakra-ui/react";
+import { Field, NativeSelect, type NativeSelectFieldProps } from "@chakra-ui/react";
 
-type SelectProps = ChakraSelectProps & {
+type SelectProps = NativeSelectFieldProps & {
   label?: string;
   error?: React.ReactNode;
   children: React.ReactNode;
@@ -16,13 +10,16 @@ type SelectProps = ChakraSelectProps & {
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({ label, error, children, name, id, ...props }, ref) => {
   const selectId = id || String(name || label || "select");
   return (
-    <FormControl isInvalid={Boolean(error)}>
-      {label && <FormLabel htmlFor={selectId}>{label}</FormLabel>}
-      <ChakraSelect id={selectId} name={name} ref={ref} borderRadius="xl" bg="white" {...props}>
-        {children}
-      </ChakraSelect>
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
-    </FormControl>
+    <Field.Root invalid={Boolean(error)}>
+      {label && <Field.Label htmlFor={selectId}>{label}</Field.Label>}
+      <NativeSelect.Root>
+        <NativeSelect.Field id={selectId} name={name} ref={ref} borderRadius="xl" bg="white" {...props}>
+          {children}
+        </NativeSelect.Field>
+        <NativeSelect.Indicator />
+      </NativeSelect.Root>
+      {error && <Field.ErrorText>{error}</Field.ErrorText>}
+    </Field.Root>
   );
 });
 

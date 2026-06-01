@@ -8,7 +8,7 @@ import App from "@/App";
 import { store } from "@/app/store";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { startMockWorker } from "@/mocks/startMockWorker";
-import { theme } from "@/theme";
+import { system } from "@/theme";
 import "@/styles.css";
 
 async function bootstrap() {
@@ -16,7 +16,7 @@ async function bootstrap() {
 
   ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider value={system}>
         <ErrorBoundary fallbackTitle="Application error">
           <Provider store={store}>
             <BrowserRouter>

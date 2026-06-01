@@ -1,10 +1,11 @@
+import type React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { theme } from "@/theme";
+import { system } from "@/theme";
 
-function BrokenComponent(): JSX.Element {
+function BrokenComponent(): React.JSX.Element {
   throw new Error("Crash for test");
 }
 
@@ -12,7 +13,7 @@ describe("ErrorBoundary", () => {
   it("renders fallback UI instead of crashing the whole app", () => {
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     render(
-      <ChakraProvider theme={theme}>
+      <ChakraProvider value={system}>
         <ErrorBoundary>
           <BrokenComponent />
         </ErrorBoundary>

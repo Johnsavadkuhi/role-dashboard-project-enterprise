@@ -64,19 +64,19 @@ export default function Login() {
 
   return (
     <Box bg="white" border="1px solid" borderColor="gray.200" borderRadius="2xl" boxShadow="xl" p={{ base: 6, md: 8 }}>
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" gap={6}>
         <Box>
           <Heading size="lg">Login</Heading>
           <Text color="gray.600" mt={2}>Use the real API form or demo buttons for testing permissions.</Text>
         </Box>
 
-        <VStack as="form" onSubmit={handleSubmit(onSubmit)} align="stretch" spacing={4}>
+        <VStack as="form" onSubmit={handleSubmit(onSubmit)} align="stretch" gap={4}>
           <Input label="Email" type="email" {...register("email")} error={errors.email?.message} />
           <Input label="Password" type="password" {...register("password")} error={errors.password?.message} />
           <Button type="submit" isLoading={isLoading} loadingText="Logging in...">Login</Button>
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3}>
+        <SimpleGrid columns={{ base: 1, sm: 2 }} gap={3}>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.ADMIN])}>Admin</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.PENTESTER])}>Pentester</Button>
           <Button variant="secondary" onClick={() => loginAsDemo([ROLES.DEVOPS])}>DevOps</Button>

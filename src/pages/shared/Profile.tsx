@@ -7,11 +7,11 @@ export default function Profile() {
   const { user, roles, permissions } = useAuth();
 
   return (
-    <VStack align="stretch" spacing={5}>
+    <VStack align="stretch" gap={5}>
       <Heading>Profile</Heading>
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={5}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5}>
         <Card title="User Info">
-          <VStack align="stretch" spacing={3}>
+          <VStack align="stretch" gap={3}>
             <Text><strong>Name:</strong> {user?.name}</Text>
             <Text><strong>Email:</strong> {user?.email}</Text>
             <Wrap>{roles.map((role) => <WrapItem key={role}><Badge>{role}</Badge></WrapItem>)}</Wrap>

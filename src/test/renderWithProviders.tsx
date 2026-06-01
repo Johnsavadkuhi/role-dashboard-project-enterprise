@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { setupStore } from "@/app/store";
-import { theme } from "@/theme";
+import { system } from "@/theme";
 
 export function renderWithProviders(
   ui: React.ReactElement,
@@ -17,7 +17,7 @@ export function renderWithProviders(
   return {
     store,
     ...render(
-      <ChakraProvider theme={theme}>
+      <ChakraProvider value={system}>
         <Provider store={store}>
           <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>
         </Provider>

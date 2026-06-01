@@ -25,11 +25,11 @@ export default function Navbar() {
       zIndex={5}
       boxShadow="sm"
     >
-      <HStack spacing={4} minW={0}>
+      <HStack gap={4} minW={0}>
         <Button variant="ghost" aria-label="Toggle sidebar" onClick={() => dispatch(toggleSidebar())}>☰</Button>
         <Box minW={0}>
-          <Text fontWeight="800" noOfLines={1}>{user?.name || "User"}</Text>
-          <Wrap spacing={2} mt={1}>
+          <Text fontWeight="800" lineClamp={1}>{user?.name || "User"}</Text>
+          <Wrap gap={2} mt={1}>
             {roles.map((role) => <WrapItem key={role}><Badge>{role}</Badge></WrapItem>)}
           </Wrap>
         </Box>
