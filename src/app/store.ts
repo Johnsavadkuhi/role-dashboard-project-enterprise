@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "@/features/auth/authSlice";
+import notificationsReducer from "@/features/notifications/notificationsSlice";
 import uiReducer from "@/features/ui/uiSlice";
 import { api } from "@/services/api";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  notifications: notificationsReducer,
   ui: uiReducer,
   [api.reducerPath]: api.reducer,
 });

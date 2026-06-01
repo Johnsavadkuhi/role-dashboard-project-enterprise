@@ -27,13 +27,19 @@ src/modules/**/*.tsx
 Core shared types:
 
 ```ts
-Role
-Permission
-User
-AuthResponse
-UploadResponse
-UserFormPayload
-ApiError
+Role;
+Permission;
+User;
+AuthResponse;
+UploadResponse;
+UserFormPayload;
+ApiError;
+```
+
+Notification type contract is documented separately:
+
+```txt
+src/docs/NOTIFICATION_TYPES.md
 ```
 
 The most important migration change is that users use an array of roles instead of one role:

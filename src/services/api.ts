@@ -43,6 +43,7 @@ export const api = createApi({
     "QA",
     "Reports",
     "Upload",
+    "Notifications",
   ],
   endpoints: () => ({}),
 });

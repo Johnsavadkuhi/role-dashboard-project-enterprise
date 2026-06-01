@@ -3,6 +3,7 @@ import { Box, Flex, HStack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { toggleSidebar } from "@/features/ui/uiSlice";
 import { useAuth } from "@/hooks/useAuth";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationCenter from "@/components/NotificationCenter";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 
@@ -26,15 +27,30 @@ export default function Navbar() {
       boxShadow="sm"
     >
       <HStack gap={4} minW={0}>
-        <Button variant="ghost" aria-label="Toggle sidebar" onClick={() => dispatch(toggleSidebar())}>☰</Button>
+        <Button
+          variant="ghost"
+          aria-label="Toggle sidebar"
+          onClick={() => dispatch(toggleSidebar())}
+        >
+          ☰
+        </Button>
         <Box minW={0}>
-          <Text fontWeight="800" lineClamp={1}>{user?.name || "User"}</Text>
+          <Text fontWeight="800" lineClamp={1}>
+            {user?.name || "User"}
+          </Text>
           <Wrap gap={2} mt={1}>
-            {roles.map((role) => <WrapItem key={role}><Badge>{role}</Badge></WrapItem>)}
+            {roles.map((role) => (
+              <WrapItem key={role}>
+                <Badge>{role}</Badge>
+              </WrapItem>
+            ))}
           </Wrap>
         </Box>
       </HStack>
-      <LogoutButton />
+      <HStack gap={3}>
+        <NotificationCenter />
+        <LogoutButton />
+      </HStack>
     </Flex>
   );
 }

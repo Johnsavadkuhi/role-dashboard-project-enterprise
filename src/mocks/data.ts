@@ -1,5 +1,6 @@
 import { ROLES } from "@/constants/roles";
 import { getPermissionsFromRoles } from "@/constants/rolePermissions";
+import type { AppNotification } from "@/types/notification";
 import type { User } from "@/types";
 
 export let mockUsers: User[] = [
@@ -54,4 +55,39 @@ export function upsertMockUser(user: User) {
   if (index >= 0) mockUsers[index] = user;
   else mockUsers.push(user);
   return user;
+}
+
+export let mockNotifications: AppNotification[] = [
+  {
+    id: "n1",
+    type: "project.assigned",
+    title: "Security project assigned",
+    message: "A new security assessment has been assigned to your team.",
+    priority: "high",
+    isRead: false,
+    createdAt: new Date().toISOString(),
+    entity: { id: "p1", type: "project", label: "Security Assessment" },
+    actionUrl: "/security-manager",
+  },
+  {
+    id: "n2",
+    type: "qa.result.submitted",
+    title: "QA result submitted",
+    message: "A QA member submitted test results for review.",
+    priority: "medium",
+    isRead: false,
+    createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+    entity: { id: "q1", type: "qa_result", label: "Regression Cycle" },
+    actionUrl: "/quality-manager",
+  },
+];
+
+export function markMockNotificationRead(id: string) {
+  const notification = mockNotifications.find((item) => item.id === id);
+  if (notification) notification.isRead = true;
+  return notification;
+}
+
+export function markAllMockNotificationsRead() {
+  mockNotifications = mockNotifications.map((item) => ({ ...item, isRead: true }));
 }
