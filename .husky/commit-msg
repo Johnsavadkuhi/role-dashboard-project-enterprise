@@ -1,0 +1,6 @@
+commit_msg_file="$1"
+commit_msg=$(cat "$commit_msg_file")
+case "$commit_msg" in
+  feat:*|fix:*|docs:*|style:*|refactor:*|test:*|chore:*|build:*|ci:*) exit 0 ;;
+  *) echo "Commit message should start with feat:, fix:, docs:, style:, refactor:, test:, chore:, build:, or ci:"; exit 1 ;;
+esac
