@@ -2,8 +2,6 @@ import { ROLES } from "@/constants/roles";
 import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 
 export const adminAuthState = {
-  token: "test-token",
-  refreshToken: "test-refresh-token",
   isAuthenticated: true,
   user: {
     id: "admin-test",
@@ -15,8 +13,6 @@ export const adminAuthState = {
 };
 
 export const qaAuthState = {
-  token: "test-token",
-  refreshToken: "test-refresh-token",
   isAuthenticated: true,
   user: {
     id: "qa-test",
@@ -28,8 +24,6 @@ export const qaAuthState = {
 };
 
 export const securityProjectManagerAuthState = {
-  token: "test-token",
-  refreshToken: "test-refresh-token",
   isAuthenticated: true,
   user: {
     id: "security-manager-test",
@@ -41,8 +35,6 @@ export const securityProjectManagerAuthState = {
 };
 
 export const qualityProjectManagerAuthState = {
-  token: "test-token",
-  refreshToken: "test-refresh-token",
   isAuthenticated: true,
   user: {
     id: "quality-manager-test",

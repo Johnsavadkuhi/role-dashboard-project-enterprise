@@ -24,7 +24,7 @@ export const handlers = [
         permissions: getPermissionsFromRoles([ROLES.ADMIN]),
       };
 
-    return HttpResponse.json({ token: "mock-access-token", refreshToken: "mock-refresh-token", user });
+    return HttpResponse.json({ user });
   }),
 
   http.post(endpoint("/auth/register"), async ({ request }) => {
@@ -40,11 +40,19 @@ export const handlers = [
       avatarUrl: body.avatarUrl,
     };
     upsertMockUser(user);
-    return HttpResponse.json({ token: "mock-access-token", refreshToken: "mock-refresh-token", user }, { status: 201 });
+    return HttpResponse.json({ user }, { status: 201 });
   }),
 
   http.post(endpoint("/auth/refresh-token"), async () => {
-    return HttpResponse.json({ token: "mock-refreshed-access-token", refreshToken: "mock-refresh-token" });
+    return HttpResponse.json({ success: true });
+  }),
+
+  http.get(endpoint("/auth/me"), () => {
+    return HttpResponse.json(mockUsers[0]);
+  }),
+
+  http.post(endpoint("/auth/logout"), () => {
+    return HttpResponse.json({ success: true });
   }),
 
   http.get(endpoint("/users"), () => HttpResponse.json(mockUsers)),

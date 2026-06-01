@@ -49,8 +49,6 @@ export default function Login() {
   const loginAsDemo = (roles: Role[]) => {
     const permissions = getPermissionsFromRoles(roles);
     saveAuthAndRedirect({
-      token: "demo-access-token",
-      refreshToken: "demo-refresh-token",
       user: {
         id: "demo-user",
         name: "Demo User",

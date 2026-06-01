@@ -269,9 +269,9 @@ src/services/qaApi.ts
 `api.ts` contains:
 
 - Base URL.
-- Authorization header injection.
-- Refresh-token handling.
-- Auto logout on invalid refresh.
+- Cookie-based requests with `credentials: "include"`.
+- Cookie-based refresh-session handling.
+- Auto logout on invalid refresh/session.
 - RTK Query tag configuration.
 
 ## 9. Signup Avatar Upload Flow
@@ -332,7 +332,7 @@ This improves performance for large projects.
 For production, connect these to a real backend:
 
 - Auth endpoints.
-- Refresh token endpoint.
+- Refresh session endpoint that rotates/validates HttpOnly cookies.
 - File upload endpoint.
 - User management endpoints.
 - Audit logs for permission changes.

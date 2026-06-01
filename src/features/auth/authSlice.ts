@@ -9,15 +9,11 @@ function safeParse(value, fallback) {
   }
 }
 
-const tokenFromStorage = localStorage.getItem("token");
-const refreshTokenFromStorage = localStorage.getItem("refreshToken");
 const userFromStorage = safeParse(localStorage.getItem("user"), null);
 
 const initialState = {
-  token: tokenFromStorage || null,
-  refreshToken: refreshTokenFromStorage || null,
   user: userFromStorage,
-  isAuthenticated: Boolean(tokenFromStorage),
+  isAuthenticated: Boolean(userFromStorage),
 };
 
 const normalizeUser = (user) => {
@@ -38,26 +34,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
-      const { token, refreshToken, user } = action.payload;
+      const { user } = action.payload;
       const normalizedUser = normalizeUser(user);
 
-      state.token = token;
-      state.refreshToken = refreshToken || null;
       state.user = normalizedUser;
-      state.isAuthenticated = Boolean(token);
+      state.isAuthenticated = Boolean(normalizedUser);
 
-      localStorage.setItem("token", token);
-      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("user", JSON.stringify(normalizedUser));
-    },
-
-    tokenRefreshed: (state, action) => {
-      const { token, refreshToken } = action.payload;
-      state.token = token;
-      if (refreshToken) state.refreshToken = refreshToken;
-
-      localStorage.setItem("token", token);
-      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
     },
 
     updateUser: (state, action) => {
@@ -67,17 +50,13 @@ const authSlice = createSlice({
     },
 
     logout: (state) => {
-      state.token = null;
-      state.refreshToken = null;
       state.user = null;
       state.isAuthenticated = false;
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
     },
   },
 });
 
-export const { loginSuccess, tokenRefreshed, updateUser, logout } = authSlice.actions;
+export const { loginSuccess, updateUser, logout } = authSlice.actions;
 export default authSlice.reducer;
