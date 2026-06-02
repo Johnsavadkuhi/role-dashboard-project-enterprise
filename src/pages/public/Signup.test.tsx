@@ -9,10 +9,10 @@ describe("Signup page", () => {
   it("requires an avatar image", async () => {
     const user = userEvent.setup();
     renderWithProviders(<Signup />);
-    await user.type(screen.getByLabelText("Name"), "New User");
-    await user.type(screen.getByLabelText("Email"), "new@example.com");
+    await user.type(screen.getByLabelText("First Name"), "New");
+    await user.type(screen.getByLabelText("Last Name"), "User");
+    await user.type(screen.getByLabelText("Username"), "newuser");
     await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByLabelText("Representative"));
     await user.click(screen.getByRole("button", { name: "Signup" }));
     expect(await screen.findByText("Avatar image is required")).toBeInTheDocument();
   });
@@ -28,10 +28,10 @@ describe("Signup page", () => {
     );
 
     const file = new File(["avatar"], "avatar.png", { type: "image/png" });
-    await user.type(screen.getByLabelText("Name"), "New User");
-    await user.type(screen.getByLabelText("Email"), "new@example.com");
+    await user.type(screen.getByLabelText("First Name"), "New");
+    await user.type(screen.getByLabelText("Last Name"), "User");
+    await user.type(screen.getByLabelText("Username"), "newuser");
     await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByLabelText("Representative"));
     await user.upload(screen.getByLabelText("Avatar Image"), file);
     await user.click(screen.getByRole("button", { name: "Signup" }));
     expect(await screen.findByText("Representative Page")).toBeInTheDocument();

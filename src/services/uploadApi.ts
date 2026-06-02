@@ -1,22 +1,21 @@
 import { api } from "@/services/api";
 import type { UploadResponse } from "@/types";
 
-type UploadPayload = { file: File; fieldName?: string; folder?: string };
+type UploadPayload = { file: File; fieldName?: string };
 
 export const uploadApi = api.injectEndpoints({
   endpoints: (builder) => ({
     uploadFile: builder.mutation<UploadResponse, UploadPayload>({
-      query: ({ file, fieldName = "file", folder = "avatars" }) => {
+      query: ({ file, fieldName = "avatar" }) => {
         const formData = new FormData();
         formData.append(fieldName, file);
-        formData.append("folder", folder);
 
-        return { url: "/uploads", method: "POST", body: formData };
+        return { url: "/upload/avatar", method: "POST", body: formData };
       },
       invalidatesTags: ["Upload"],
     }),
     deleteFile: builder.mutation<{ success: boolean }, string>({
-      query: (fileId) => ({ url: `/uploads/${fileId}`, method: "DELETE" }),
+      query: (fileId) => ({ url: `/upload/${fileId}`, method: "DELETE" }),
       invalidatesTags: ["Upload"],
     }),
   }),

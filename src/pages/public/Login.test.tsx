@@ -10,8 +10,12 @@ describe("Login page", () => {
     const user = userEvent.setup();
     renderWithProviders(<Login />);
     await user.click(screen.getByRole("button", { name: "Login" }));
-    expect(await screen.findByText("Enter a valid email")).toBeInTheDocument();
-    expect(await screen.findByText("Password must be at least 6 characters")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Username must be at least 3 characters")
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText("Password must be at least 6 characters")
+    ).toBeInTheDocument();
   });
 
   it("logs in with mocked API and redirects", async () => {
@@ -24,7 +28,7 @@ describe("Login page", () => {
       { route: "/login" }
     );
 
-    await user.type(screen.getByLabelText("Email"), "admin@example.com");
+    await user.type(screen.getByLabelText("Username"), "admin");
     await user.type(screen.getByLabelText("Password"), "password123");
     await user.click(screen.getByRole("button", { name: "Login" }));
     expect(await screen.findByText("Admin Page")).toBeInTheDocument();

@@ -1,8 +1,15 @@
 import { api } from "@/services/api";
 import type { AuthResponse } from "@/types";
 
-type LoginPayload = { email: string; password: string };
-type RegisterPayload = { name: string; email: string; password: string; roles: string[]; avatarUrl?: string; avatarFileId?: string };
+type LoginPayload = { username: string; password: string };
+type RegisterPayload = {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+  avatarUrl?: string;
+  avatarFileId?: string;
+};
 
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,7 +18,11 @@ export const authApi = api.injectEndpoints({
       invalidatesTags: ["Auth"],
     }),
     registerUser: builder.mutation<AuthResponse, RegisterPayload>({
-      query: (registerData) => ({ url: "/auth/register", method: "POST", body: registerData }),
+      query: (registerData) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: registerData,
+      }),
       invalidatesTags: ["Auth", "Users"],
     }),
     getMe: builder.query<AuthResponse["user"], void>({
@@ -25,4 +36,9 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation, useGetMeQuery, useLogoutUserMutation } = authApi;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useGetMeQuery,
+  useLogoutUserMutation,
+} = authApi;

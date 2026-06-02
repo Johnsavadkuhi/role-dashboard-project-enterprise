@@ -10,21 +10,26 @@ import {
 } from "@/mocks/data";
 import type { User } from "@/types";
 
-const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 const endpoint = (path: string) => `${apiUrl}${path}`;
 
 export const handlers = [
   http.post(endpoint("/auth/login"), async ({ request }) => {
-    const body = (await request.json()) as { email?: string; password?: string };
-    if (!body.email || !body.password || body.password.length < 6) {
-      return HttpResponse.json({ message: "Invalid email or password" }, { status: 401 });
+    const body = (await request.json()) as { username?: string; password?: string };
+    if (!body.username || !body.password || body.password.length < 6) {
+      return HttpResponse.json(
+        { message: "Invalid username or password" },
+        { status: 401 }
+      );
     }
 
-    const user = mockUsers.find((item) => item.email === body.email) ||
+    const user = mockUsers.find(
+      (item) => item.email === body.username || item.name === body.username
+    ) ||
       mockUsers[0] || {
         id: "1",
         name: "Admin User",
-        email: body.email,
+        email: `${body.username}@example.com`,
         roles: [ROLES.ADMIN],
         permissions: getPermissionsFromRoles([ROLES.ADMIN]),
       };
@@ -33,15 +38,20 @@ export const handlers = [
   }),
 
   http.post(endpoint("/auth/register"), async ({ request }) => {
-    const body = (await request.json()) as Partial<User> & { password?: string };
+    const body = (await request.json()) as Partial<User> & {
+      firstName?: string;
+      lastName?: string;
+      username?: string;
+      password?: string;
+    };
     const roles = body.roles?.length ? body.roles : [ROLES.REPRESENTATIVE];
     const permissions = body.permissions?.length
       ? body.permissions
       : getPermissionsFromRoles(roles);
     const user: User = {
       id: crypto.randomUUID(),
-      name: body.name || "New User",
-      email: body.email || "new@example.com",
+      name: `${body.firstName || "New"} ${body.lastName || "User"}`,
+      email: body.username ? `${body.username}@example.com` : "new@example.com",
       roles,
       permissions,
       avatarUrl: body.avatarUrl,
@@ -79,7 +89,7 @@ export const handlers = [
     return HttpResponse.json({ success: true, id: params.id });
   }),
 
-  http.post(endpoint("/uploads"), async () => {
+  http.post(endpoint("/upload/avatar"), async () => {
     return HttpResponse.json({
       url: "https://placehold.co/256x256?text=Avatar",
       fileId: crypto.randomUUID(),
