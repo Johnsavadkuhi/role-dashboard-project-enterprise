@@ -8,6 +8,9 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
   roles: Role[];
   permissions: Permission[];
   avatarUrl?: string;
@@ -15,6 +18,7 @@ export type User = {
 
 export type AuthResponse = {
   user: User;
+  csrfToken?: string;
 };
 
 export type UploadResponse = {

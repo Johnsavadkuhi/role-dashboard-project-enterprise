@@ -10,6 +10,7 @@ import { useLoginUserMutation } from "@/services/authApi";
 import { getDashboardPathByPermissions } from "@/utils/dashboard";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import type { ApiError, AuthResponse } from "@/types";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -17,6 +18,13 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = { username: string; password: string };
+type LoginResponse = AuthResponse | { data?: AuthResponse };
+
+const getAuthPayload = (response: LoginResponse): AuthResponse => {
+  if ("user" in response && response.user) return response;
+  if ("data" in response && response.data?.user) return response.data;
+  throw new Error("Login response did not include a user");
+};
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -32,22 +40,27 @@ export default function Login() {
     defaultValues: { username: "", password: "" },
   });
 
-  const saveAuthAndRedirect = (payload) => {
+  const saveAuthAndRedirect = (payload: AuthResponse) => {
     dispatch(loginSuccess(payload));
-    toast.success("Login successful");
     navigate(getDashboardPathByPermissions(payload.user.permissions));
+    toast.success("Login successful");
   };
 
   const onSubmit = async (values: LoginFormValues) => {
+    let response: LoginResponse;
+
     try {
-      const response = await loginUser({
+      response = await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
-      saveAuthAndRedirect(response);
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Login failed");
+    } catch (error) {
+      const apiError = error as ApiError;
+      toast.error(apiError?.data?.message || "Login failed");
+      return;
     }
+
+    saveAuthAndRedirect(getAuthPayload(response));
   };
 
   return (

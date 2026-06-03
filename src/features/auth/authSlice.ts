@@ -9,7 +9,31 @@ function safeParse(value, fallback) {
   }
 }
 
-const userFromStorage = safeParse(localStorage.getItem("user"), null);
+function safeGetStorageItem(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetStorageItem(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Auth state in Redux is still valid for the current session.
+  }
+}
+
+function safeRemoveStorageItem(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Ignore storage failures during logout.
+  }
+}
+
+const userFromStorage = safeParse(safeGetStorageItem("user"), null);
 
 const initialState = {
   user: userFromStorage,
@@ -40,20 +64,20 @@ const authSlice = createSlice({
       state.user = normalizedUser;
       state.isAuthenticated = Boolean(normalizedUser);
 
-      localStorage.setItem("user", JSON.stringify(normalizedUser));
+      safeSetStorageItem("user", JSON.stringify(normalizedUser));
     },
 
     updateUser: (state, action) => {
       const normalizedUser = normalizeUser({ ...state.user, ...action.payload });
       state.user = normalizedUser;
-      localStorage.setItem("user", JSON.stringify(normalizedUser));
+      safeSetStorageItem("user", JSON.stringify(normalizedUser));
     },
 
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
 
-      localStorage.removeItem("user");
+      safeRemoveStorageItem("user");
     },
   },
 });
