@@ -39,3 +39,47 @@ export type UserFormPayload = {
   permissions: Permission[];
   avatarUrl?: string;
 };
+
+export type ProjectStatus = "planning" | "active" | "blocked" | "review" | "completed";
+export type ProjectPriority = "low" | "medium" | "high" | "critical";
+export type ProjectDiscipline = "security" | "quality" | "devops" | "platform";
+export type ProjectAssignmentRole = "pentester" | "qa";
+export type ProjectAssignmentStatus =
+  | "assigned"
+  | "in_progress"
+  | "submitted"
+  | "changes_requested"
+  | "accepted";
+
+export type Project = {
+  id: string;
+  name: string;
+  client: string;
+  discipline: ProjectDiscipline;
+  status: ProjectStatus;
+  priority: ProjectPriority;
+  owner: string;
+  assignee: string;
+  dueDate: string;
+  progress: number;
+  riskScore: number;
+  vulnerabilities: number;
+  testCoverage: number;
+  openBugs: number;
+  environment: string;
+  repository: string;
+  pipeline: string;
+  lastActivity: string;
+};
+
+export type ProjectAssignment = Project & {
+  assignmentId: string;
+  assignmentRole: ProjectAssignmentRole;
+  assignmentStatus: ProjectAssignmentStatus;
+  assignedAt: string;
+  assignmentDueDate: string;
+  reviewer: string;
+  scope: string;
+  phase: string;
+  submittedItems: number;
+};
