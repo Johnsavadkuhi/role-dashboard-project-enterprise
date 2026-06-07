@@ -2,6 +2,8 @@ import { useDispatch } from "react-redux";
 import { Box, Flex, HStack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { toggleSidebar } from "@/features/ui/uiSlice";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/i18n";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationCenter from "@/components/NotificationCenter";
 import Badge from "@/components/ui/Badge";
@@ -10,6 +12,7 @@ import Button from "@/components/ui/Button";
 export default function Navbar() {
   const dispatch = useDispatch();
   const { user, roles } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <Flex
@@ -29,7 +32,7 @@ export default function Navbar() {
       <HStack gap={4} minW={0}>
         <Button
           variant="ghost"
-          aria-label="Toggle sidebar"
+          aria-label={t("nav.toggleSidebar")}
           onClick={() => dispatch(toggleSidebar())}
         >
           ☰
@@ -48,6 +51,7 @@ export default function Navbar() {
         </Box>
       </HStack>
       <HStack gap={3}>
+        <LanguageSwitcher />
         <NotificationCenter />
         <LogoutButton />
       </HStack>

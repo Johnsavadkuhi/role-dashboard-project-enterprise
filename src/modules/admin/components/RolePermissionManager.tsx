@@ -16,6 +16,7 @@ import {
 import { PERMISSIONS } from "@/constants/permissions";
 import { ROLE_LABELS, ROLES } from "@/constants/roles";
 import { getPermissionsFromRoles } from "@/constants/rolePermissions";
+import { useLanguage } from "@/i18n";
 import { useUpdateUserMutation } from "@/services/usersApi";
 import type { Permission, Role, User, UserStatus } from "@/types";
 import Badge from "@/components/ui/Badge";
@@ -26,21 +27,21 @@ const allRoles = Object.values(ROLES) as Role[];
 const allPermissions = Object.values(PERMISSIONS) as Permission[];
 const userStatuses: UserStatus[] = ["Active", "Inactive"];
 
-const statusLabels: Record<UserStatus, string> = {
-  Active: "Active",
-  Inactive: "Inactive",
-};
-
 const statusPalettes: Record<UserStatus, string> = {
   Active: "green",
   Inactive: "red",
 };
+
+function getStatusLabel(status: UserStatus, t: ReturnType<typeof useLanguage>["t"]) {
+  return status === "Inactive" ? t("common.inactive") : t("common.active");
+}
 
 function toggleValue<T extends string>(list: T[], value: T) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 }
 
 export default function RolePermissionManager({ users }: { users: User[] }) {
+  const { t } = useLanguage();
   const [selectedUserId, setSelectedUserId] = useState(users[0]?.id || "");
   const selectedUser = users.find((user) => user.id === selectedUserId) || users[0];
 
@@ -85,22 +86,22 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
         permissions: draftPermissions,
         status: draftStatus,
       }).unwrap();
-      toast.success("User access updated");
+      toast.success(t("userAccess.saveSuccess"));
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update user");
+      toast.error(error?.data?.message || t("userAccess.saveError"));
     }
   };
 
   if (!selectedUser) {
     return (
-      <Card title="Role & Permission Manager">
-        <Text>No users available.</Text>
+      <Card title={t("userAccess.title")}>
+        <Text>{t("userAccess.empty")}</Text>
       </Card>
     );
   }
 
   return (
-    <Card title="User Access Management">
+    <Card title={t("userAccess.title")}>
       <SimpleGrid
         columns={{ base: 1, lg: 2 }}
         templateColumns={{ base: "1fr", lg: "280px 1fr" }}
@@ -114,7 +115,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
           pb={{ base: 4, lg: 0 }}
         >
           <Heading as="h3" size="sm" mb={4}>
-            Users
+            {t("userAccess.users")}
           </Heading>
           <VStack align="stretch" gap={3}>
             {users.map((user) => (
@@ -140,7 +141,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
                     px={2}
                     textTransform="none"
                   >
-                    {statusLabels[user.status || "Active"]}
+                    {getStatusLabel(user.status || "Active", t)}
                   </ChakraBadge>
                 </HStack>
                 <Text color="gray.600" fontSize="sm">
@@ -162,14 +163,18 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
               </Heading>
               <Text color="gray.600">{selectedUser.username}</Text>
             </Box>
-            <Button onClick={handleSave} isLoading={isLoading} loadingText="Saving...">
-              Save Access
+            <Button
+              onClick={handleSave}
+              isLoading={isLoading}
+              loadingText={t("common.loading")}
+            >
+              {t("common.saveAccess")}
             </Button>
           </HStack>
 
           <Box>
             <Heading as="h4" size="sm" mb={3}>
-              User State
+              {t("userAccess.userState")}
             </Heading>
             <NativeSelect.Root maxW="260px">
               <NativeSelect.Field
@@ -180,7 +185,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
               >
                 {userStatuses.map((status) => (
                   <option key={status} value={status}>
-                    {statusLabels[status]}
+                    {getStatusLabel(status, t)}
                   </option>
                 ))}
               </NativeSelect.Field>
@@ -190,7 +195,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
 
           <Box>
             <Heading as="h4" size="sm" mb={3}>
-              Roles
+              {t("userAccess.roles")}
             </Heading>
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={3}>
               {allRoles.map((role) => (
@@ -222,11 +227,10 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
 
           <Box>
             <Heading as="h4" size="sm" mb={2}>
-              Direct Permissions
+              {t("userAccess.directPermissions")}
             </Heading>
             <Text color="gray.600" mb={4}>
-              Role changes auto-fill default permissions. You can still fine-tune
-              permissions manually.
+              {t("userAccess.permissionsHelp")}
             </Text>
             <VStack align="stretch" gap={4}>
               {Object.entries(groupedPermissions).map(([group, permissions]) => (

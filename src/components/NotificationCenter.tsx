@@ -22,6 +22,7 @@ import {
   useMarkAllNotificationsReadMutation,
   useMarkNotificationReadMutation,
 } from "@/services/notificationsApi";
+import { useLanguage } from "@/i18n";
 import type { AppNotification, NotificationPriority } from "@/types/notification";
 import Button from "@/components/ui/Button";
 
@@ -71,6 +72,7 @@ const formatTime = (value: string) => {
 
 function NotificationItem({ notification }: { notification: AppNotification }) {
   const dispatch = useDispatch();
+  const { t } = useLanguage();
   const [markRead] = useMarkNotificationReadMutation();
 
   const handleMarkRead = async () => {
@@ -110,7 +112,7 @@ function NotificationItem({ notification }: { notification: AppNotification }) {
         </Box>
         {!notification.isRead && (
           <Button variant="ghost" size="sm" onClick={handleMarkRead}>
-            Read
+            {t("common.read")}
           </Button>
         )}
       </HStack>
@@ -123,7 +125,7 @@ function NotificationItem({ notification }: { notification: AppNotification }) {
           mt={2}
           display="inline-flex"
         >
-          <RouterLink to={notification.actionUrl}>Open</RouterLink>
+          <RouterLink to={notification.actionUrl}>{t("common.open")}</RouterLink>
         </ChakraLink>
       )}
     </Box>
@@ -132,6 +134,7 @@ function NotificationItem({ notification }: { notification: AppNotification }) {
 
 export default function NotificationCenter() {
   const dispatch = useDispatch();
+  const { t } = useLanguage();
   const { connectionStatus, notifications, unreadCount } = useNotifications();
   const [markAllRead, { isLoading }] = useMarkAllNotificationsReadMutation();
 
@@ -149,7 +152,7 @@ export default function NotificationCenter() {
     <Popover.Root positioning={{ placement: "bottom-end" }} lazyMount unmountOnExit>
       <Popover.Trigger asChild>
         <IconButton
-          aria-label={`Notifications, ${unreadCount} unread`}
+          aria-label={t("notifications.aria", { count: unreadCount })}
           colorPalette="blue"
           variant="subtle"
           position="relative"
@@ -182,9 +185,11 @@ export default function NotificationCenter() {
             <Popover.Header>
               <HStack justify="space-between" gap={3}>
                 <Box>
-                  <Popover.Title fontWeight="800">Notifications</Popover.Title>
+                  <Popover.Title fontWeight="800">
+                    {t("notifications.title")}
+                  </Popover.Title>
                   <Text color="gray.500" fontSize="xs">
-                    Realtime status: {connectionStatus}
+                    {t("notifications.realtimeStatus", { status: connectionStatus })}
                   </Text>
                 </Box>
                 <Button
@@ -193,7 +198,7 @@ export default function NotificationCenter() {
                   isLoading={isLoading}
                   onClick={handleMarkAllRead}
                 >
-                  Mark all read
+                  {t("notifications.markAllRead")}
                 </Button>
               </HStack>
             </Popover.Header>
@@ -201,9 +206,9 @@ export default function NotificationCenter() {
             <Popover.Body p={0}>
               {notifications.length === 0 ? (
                 <VStack align="stretch" gap={1} p={4}>
-                  <Text fontWeight="700">No notifications</Text>
+                  <Text fontWeight="700">{t("notifications.emptyTitle")}</Text>
                   <Text color="gray.600" fontSize="sm">
-                    New project, review, report, and system events will appear here.
+                    {t("notifications.emptyDescription")}
                   </Text>
                 </VStack>
               ) : (

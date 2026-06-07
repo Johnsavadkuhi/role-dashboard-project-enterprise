@@ -1,0 +1,222 @@
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
+
+export type Language = "en" | "fa";
+
+export type TranslationKey =
+  | "app.name"
+  | "common.active"
+  | "common.inactive"
+  | "common.language"
+  | "common.loading"
+  | "common.noUsers"
+  | "common.open"
+  | "common.read"
+  | "common.saveAccess"
+  | "common.user"
+  | "languages.en"
+  | "languages.fa"
+  | "nav.toggleSidebar"
+  | "nav.logout"
+  | "nav.loggedOut"
+  | "notifications.aria"
+  | "notifications.emptyDescription"
+  | "notifications.emptyTitle"
+  | "notifications.markAllRead"
+  | "notifications.realtimeStatus"
+  | "notifications.title"
+  | "sidebar.account"
+  | "sidebar.admin"
+  | "sidebar.adminDashboard"
+  | "sidebar.dashboards"
+  | "sidebar.devopsDashboard"
+  | "sidebar.pentesterDashboard"
+  | "sidebar.profile"
+  | "sidebar.projects"
+  | "sidebar.qaDashboard"
+  | "sidebar.qualityManagerDashboard"
+  | "sidebar.representativeDashboard"
+  | "sidebar.securityManagerDashboard"
+  | "sidebar.settings"
+  | "sidebar.userManagement"
+  | "sidebar.workspace"
+  | "userAccess.directPermissions"
+  | "userAccess.empty"
+  | "userAccess.permissionsHelp"
+  | "userAccess.roles"
+  | "userAccess.saveError"
+  | "userAccess.saveSuccess"
+  | "userAccess.title"
+  | "userAccess.userState"
+  | "userAccess.users";
+
+const translations: Record<Language, Record<TranslationKey, string>> = {
+  en: {
+    "app.name": "Security Platform",
+    "common.active": "Active",
+    "common.inactive": "Inactive",
+    "common.language": "Language",
+    "common.loading": "Loading...",
+    "common.noUsers": "No users available.",
+    "common.open": "Open",
+    "common.read": "Read",
+    "common.saveAccess": "Save Access",
+    "common.user": "User",
+    "languages.en": "English",
+    "languages.fa": "فارسی",
+    "nav.toggleSidebar": "Toggle sidebar",
+    "nav.logout": "Logout",
+    "nav.loggedOut": "Logged out successfully",
+    "notifications.aria": "Notifications, {count} unread",
+    "notifications.emptyDescription":
+      "New project, review, report, and system events will appear here.",
+    "notifications.emptyTitle": "No notifications",
+    "notifications.markAllRead": "Mark all read",
+    "notifications.realtimeStatus": "Realtime status: {status}",
+    "notifications.title": "Notifications",
+    "sidebar.account": "Account",
+    "sidebar.admin": "Admin",
+    "sidebar.adminDashboard": "Admin Dashboard",
+    "sidebar.dashboards": "Dashboards",
+    "sidebar.devopsDashboard": "DevOps Dashboard",
+    "sidebar.pentesterDashboard": "Pentester Dashboard",
+    "sidebar.profile": "Profile",
+    "sidebar.projects": "Projects",
+    "sidebar.qaDashboard": "QA Dashboard",
+    "sidebar.qualityManagerDashboard": "Quality Manager Dashboard",
+    "sidebar.representativeDashboard": "Representative Dashboard",
+    "sidebar.securityManagerDashboard": "Security Manager Dashboard",
+    "sidebar.settings": "Settings",
+    "sidebar.userManagement": "User Management",
+    "sidebar.workspace": "Workspace",
+    "userAccess.directPermissions": "Direct Permissions",
+    "userAccess.empty": "No users available.",
+    "userAccess.permissionsHelp":
+      "Role changes auto-fill default permissions. You can still fine-tune permissions manually.",
+    "userAccess.roles": "Roles",
+    "userAccess.saveError": "Failed to update user",
+    "userAccess.saveSuccess": "User access updated",
+    "userAccess.title": "User Access Management",
+    "userAccess.userState": "User State",
+    "userAccess.users": "Users",
+  },
+  fa: {
+    "app.name": "سامانه امنیت",
+    "common.active": "فعال",
+    "common.inactive": "غیرفعال",
+    "common.language": "زبان",
+    "common.loading": "در حال بارگذاری...",
+    "common.noUsers": "کاربری موجود نیست.",
+    "common.open": "باز کردن",
+    "common.read": "خوانده شد",
+    "common.saveAccess": "ذخیره دسترسی",
+    "common.user": "کاربر",
+    "languages.en": "English",
+    "languages.fa": "فارسی",
+    "nav.toggleSidebar": "باز و بسته کردن منو",
+    "nav.logout": "خروج",
+    "nav.loggedOut": "با موفقیت خارج شدید",
+    "notifications.aria": "اعلان ها، {count} خوانده نشده",
+    "notifications.emptyDescription":
+      "رویدادهای پروژه، بازبینی، گزارش و سیستم اینجا نمایش داده می شوند.",
+    "notifications.emptyTitle": "اعلانی وجود ندارد",
+    "notifications.markAllRead": "همه خوانده شد",
+    "notifications.realtimeStatus": "وضعیت زنده: {status}",
+    "notifications.title": "اعلان ها",
+    "sidebar.account": "حساب کاربری",
+    "sidebar.admin": "مدیریت",
+    "sidebar.adminDashboard": "داشبورد مدیریت",
+    "sidebar.dashboards": "داشبوردها",
+    "sidebar.devopsDashboard": "داشبورد دواپس",
+    "sidebar.pentesterDashboard": "داشبورد تست نفوذ",
+    "sidebar.profile": "پروفایل",
+    "sidebar.projects": "پروژه ها",
+    "sidebar.qaDashboard": "داشبورد کنترل کیفیت",
+    "sidebar.qualityManagerDashboard": "داشبورد مدیر کیفیت",
+    "sidebar.representativeDashboard": "داشبورد نماینده",
+    "sidebar.securityManagerDashboard": "داشبورد مدیر امنیت",
+    "sidebar.settings": "تنظیمات",
+    "sidebar.userManagement": "مدیریت کاربران",
+    "sidebar.workspace": "فضای کاری",
+    "userAccess.directPermissions": "دسترسی های مستقیم",
+    "userAccess.empty": "کاربری موجود نیست.",
+    "userAccess.permissionsHelp":
+      "تغییر نقش ها دسترسی های پیش فرض را پر می کند. همچنان می توانید دسترسی ها را دستی تنظیم کنید.",
+    "userAccess.roles": "نقش ها",
+    "userAccess.saveError": "به روزرسانی کاربر ناموفق بود",
+    "userAccess.saveSuccess": "دسترسی کاربر به روز شد",
+    "userAccess.title": "مدیریت دسترسی کاربر",
+    "userAccess.userState": "وضعیت کاربر",
+    "userAccess.users": "کاربران",
+  },
+};
+
+type Interpolation = Record<string, string | number>;
+
+type LanguageContextValue = {
+  dir: "ltr" | "rtl";
+  language: Language;
+  setLanguage: (language: Language) => void;
+  t: (key: TranslationKey, values?: Interpolation) => string;
+};
+
+const fallbackContext: LanguageContextValue = {
+  dir: "ltr",
+  language: "en",
+  setLanguage: () => {},
+  t: (key) => translations.en[key],
+};
+
+const LanguageContext = createContext<LanguageContextValue>(fallbackContext);
+const storageKey = "app-language";
+
+function getInitialLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved === "fa" || saved === "en") return saved;
+  } catch {
+    // English remains the default if storage is unavailable.
+  }
+  return "en";
+}
+
+function interpolate(value: string, values?: Interpolation) {
+  if (!values) return value;
+  return Object.entries(values).reduce(
+    (text, [key, replacement]) => text.split(`{${key}}`).join(String(replacement)),
+    value
+  );
+}
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const dir = language === "fa" ? "rtl" : "ltr";
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = dir;
+    document.body.dir = dir;
+    try {
+      localStorage.setItem(storageKey, language);
+    } catch {
+      // Language still works for the current session.
+    }
+  }, [dir, language]);
+
+  const value = useMemo<LanguageContextValue>(
+    () => ({
+      dir,
+      language,
+      setLanguage: setLanguageState,
+      t: (key, values) =>
+        interpolate(translations[language][key] || translations.en[key], values),
+    }),
+    [dir, language]
+  );
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}

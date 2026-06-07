@@ -7,6 +7,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import App from "@/App";
 import { store } from "@/app/store";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { LanguageProvider } from "@/i18n";
 import { startMockWorker } from "@/mocks/startMockWorker";
 import { system } from "@/theme";
 import "@/styles.css";
@@ -19,10 +20,12 @@ async function bootstrap() {
       <ChakraProvider value={system}>
         <ErrorBoundary fallbackTitle="Application error">
           <Provider store={store}>
-            <BrowserRouter>
-              <App />
-              <Toaster position="top-right" />
-            </BrowserRouter>
+            <LanguageProvider>
+              <BrowserRouter>
+                <App />
+                <Toaster position="top-right" />
+              </BrowserRouter>
+            </LanguageProvider>
           </Provider>
         </ErrorBoundary>
       </ChakraProvider>

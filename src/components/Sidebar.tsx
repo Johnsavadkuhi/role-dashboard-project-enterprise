@@ -4,10 +4,12 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
 import { sidebarItems } from "@/config/sidebarItems";
 import { usePermission } from "@/hooks/usePermission";
+import { useLanguage } from "@/i18n";
 
 export default function Sidebar() {
   const { sidebarOpen } = useSelector((state: RootState) => state.ui);
   const { hasAnyPermission } = usePermission();
+  const { t } = useLanguage();
 
   const visibleItems = sidebarItems.filter((item) => hasAnyPermission(item.permissions));
   const sections = visibleItems.reduce<Record<string, typeof visibleItems>>(
@@ -31,7 +33,7 @@ export default function Sidebar() {
       minH={{ base: "auto", md: "100vh" }}
     >
       <Heading as="h2" size="md" mb={6}>
-        Security Platform
+        {t("app.name")}
       </Heading>
       <VStack as="nav" align="stretch" gap={5}>
         {Object.entries(sections).map(([section, items]) => (
@@ -43,7 +45,7 @@ export default function Sidebar() {
               textTransform="uppercase"
               letterSpacing="0"
             >
-              {section}
+              {t(items[0].sectionKey)}
             </Text>
             {items.map((item) => (
               <ChakraLink
@@ -56,7 +58,7 @@ export default function Sidebar() {
                 _hover={{ bg: "gray.700", color: "white" }}
                 css={{ "&.active": { background: "#1e293b", color: "white" } }}
               >
-                <NavLink to={item.path}>{item.title}</NavLink>
+                <NavLink to={item.path}>{t(item.titleKey)}</NavLink>
               </ChakraLink>
             ))}
           </VStack>
