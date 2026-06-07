@@ -1,4 +1,6 @@
 import { PERMISSIONS } from "@/constants/permissions";
+import { ROLES } from "@/constants/roles";
+import type { Role } from "@/types";
 import type { TranslationKey } from "@/i18n";
 
 const projectRoutePermissions = [
@@ -10,12 +12,13 @@ const projectRoutePermissions = [
   PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ,
 ];
 
-type SidebarItem = {
+export type SidebarItem = {
   icon: string;
   title: string;
   titleKey: TranslationKey;
   path: string;
   permissions: string[];
+  roles?: Role[];
   section: string;
   sectionKey: TranslationKey;
 };
@@ -27,6 +30,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.adminDashboard",
     path: "/admin",
     permissions: [PERMISSIONS.ADMIN_DASHBOARD_READ],
+    roles: [ROLES.ADMIN],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -45,6 +49,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.securityManagerDashboard",
     path: "/security-manager",
     permissions: [PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ],
+    roles: [ROLES.SECURITY_PROJECT_MANAGER],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -54,6 +59,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.pentesterDashboard",
     path: "/pentester",
     permissions: [PERMISSIONS.PENTEST_DASHBOARD_READ],
+    roles: [ROLES.PENTESTER],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -63,6 +69,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.devopsDashboard",
     path: "/devops",
     permissions: [PERMISSIONS.DEVOPS_DASHBOARD_READ],
+    roles: [ROLES.DEVOPS],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -72,6 +79,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.representativeDashboard",
     path: "/representative",
     permissions: [PERMISSIONS.REPRESENTATIVE_DASHBOARD_READ],
+    roles: [ROLES.REPRESENTATIVE],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -81,6 +89,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.qualityManagerDashboard",
     path: "/quality-manager",
     permissions: [PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ],
+    roles: [ROLES.QUALITY_PROJECT_MANAGER],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },
@@ -90,6 +99,7 @@ export const sidebarItems: SidebarItem[] = [
     titleKey: "sidebar.qaDashboard",
     path: "/qa",
     permissions: [PERMISSIONS.QA_DASHBOARD_READ],
+    roles: [ROLES.QA],
     section: "Dashboards",
     sectionKey: "sidebar.dashboards",
   },

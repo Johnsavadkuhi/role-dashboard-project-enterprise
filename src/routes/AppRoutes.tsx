@@ -35,8 +35,23 @@ export default function AppRoutes() {
             {protectedRouteConfig.map((route) => {
               const Page = route.element;
               return (
-                <Route key={route.path} element={<PermissionRoute permissions={route.permissions} />}>
-                  <Route path={route.path} element={<ErrorBoundary><Page /></ErrorBoundary>} />
+                <Route
+                  key={route.path}
+                  element={
+                    <PermissionRoute
+                      permissions={route.permissions}
+                      roles={route.roles}
+                    />
+                  }
+                >
+                  <Route
+                    path={route.path}
+                    element={
+                      <ErrorBoundary>
+                        <Page />
+                      </ErrorBoundary>
+                    }
+                  />
                 </Route>
               );
             })}

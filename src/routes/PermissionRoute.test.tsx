@@ -78,6 +78,26 @@ describe("route guards", () => {
     expect(screen.getByText("QA Page")).toBeInTheDocument();
   });
 
+  it("blocks dashboard routes when the user has permission but not the represented role", () => {
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={
+            <PermissionRoute
+              permissions={[PERMISSIONS.QA_DASHBOARD_READ]}
+              roles={[ROLES.QA]}
+            />
+          }
+        >
+          <Route path="/qa" element={<div>QA Page</div>} />
+        </Route>
+        <Route path="/unauthorized" element={<div>Unauthorized</div>} />
+      </Routes>,
+      { route: "/qa", preloadedState: { auth: adminAuthState } }
+    );
+    expect(screen.getByText("Unauthorized")).toBeInTheDocument();
+  });
+
   it("blocks users without required permission", () => {
     renderWithProviders(
       <Routes>
@@ -122,19 +142,37 @@ describe("permission UI", () => {
     renderWithProviders(<Sidebar />, {
       preloadedState: { auth: qaAuthState, ui: { sidebarOpen: true, theme: "light" } },
     });
-    expect(screen.getByText("QA Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("QA Dashboard")).not.toBeInTheDocument();
     expect(screen.queryByText("Create Project")).not.toBeInTheDocument();
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
   });
 
-  it("Sidebar shows the security manager dashboard for security project managers", () => {
+  it("Sidebar shows one dashboard entry for admins", () => {
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: adminAuthState,
+        ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
+      },
+    });
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("User Management")).toBeInTheDocument();
+    expect(screen.getByText("Create Project")).toBeInTheDocument();
+    expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
+    expect(screen.queryByText("QA Dashboard")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pentester Dashboard")).not.toBeInTheDocument();
+    expect(screen.queryByText("Security Manager Dashboard")).not.toBeInTheDocument();
+  });
+
+  it("Sidebar shows a single dashboard entry for security project managers", () => {
     renderWithProviders(<Sidebar />, {
       preloadedState: {
         auth: securityProjectManagerAuthState,
         ui: { sidebarOpen: true, theme: "light" },
       },
     });
-    expect(screen.getByText("Security Manager Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("Security Manager Dashboard")).not.toBeInTheDocument();
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
   });
 });

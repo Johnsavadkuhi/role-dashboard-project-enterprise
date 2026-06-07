@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { useLoginUserMutation } from "@/services/authApi";
-import { getDashboardPathByPermissions } from "@/utils/dashboard";
+import { getDashboardPathByRoles } from "@/utils/dashboard";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import type { ApiError, AuthResponse } from "@/types";
@@ -42,7 +42,7 @@ export default function Login() {
 
   const saveAuthAndRedirect = (payload: AuthResponse) => {
     dispatch(loginSuccess(payload));
-    navigate(getDashboardPathByPermissions(payload.user.permissions));
+    navigate(getDashboardPathByRoles(payload.user.roles, payload.user.permissions));
     toast.success("Login successful");
   };
 

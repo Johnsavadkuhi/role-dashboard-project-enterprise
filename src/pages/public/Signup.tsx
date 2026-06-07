@@ -8,7 +8,7 @@ import { Box, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { useRegisterUserMutation } from "@/services/authApi";
 import { useUploadFileMutation } from "@/services/uploadApi";
-import { getDashboardPathByPermissions } from "@/utils/dashboard";
+import { getDashboardPathByRoles } from "@/utils/dashboard";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
@@ -69,7 +69,7 @@ export default function Signup() {
 
       dispatch(loginSuccess(response));
       toast.success("Account created successfully");
-      navigate(getDashboardPathByPermissions(response.user.permissions));
+      navigate(getDashboardPathByRoles(response.user.roles, response.user.permissions));
     } catch (error: any) {
       toast.error(error?.data?.message || "Signup failed");
     }

@@ -13,13 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
-import { sidebarItems } from "@/config/sidebarItems";
+import { sidebarItems, type SidebarItem } from "@/config/sidebarItems";
 import { closeDrawer, openDrawer } from "@/features/ui/uiSlice";
 import { usePermission } from "@/hooks/usePermission";
 import { useLanguage } from "@/i18n";
+import { getDashboardPathByRoles } from "@/utils/dashboard";
 
-type VisibleItem = (typeof sidebarItems)[number];
-type IconName = VisibleItem["icon"];
+type IconName = SidebarItem["icon"];
 
 const sectionOrder = ["Dashboards", "Workspace", "Admin", "Account"];
 
@@ -74,8 +74,8 @@ function NavIcon({ name }: { name: IconName }) {
   );
 }
 
-function groupItems(items: VisibleItem[]) {
-  const grouped = items.reduce<Record<string, VisibleItem[]>>((groups, item) => {
+function groupItems(items: SidebarItem[]) {
+  const grouped = items.reduce<Record<string, SidebarItem[]>>((groups, item) => {
     groups[item.section] = groups[item.section] || [];
     groups[item.section].push(item);
     return groups;
@@ -93,7 +93,7 @@ function NavigationPanel({
   sections,
 }: {
   onNavigate?: () => void;
-  sections: Array<[string, VisibleItem[]]>;
+  sections: Array<[string, SidebarItem[]]>;
 }) {
   const { t } = useLanguage();
 
@@ -226,10 +226,27 @@ function NavigationPanel({
 export default function Sidebar() {
   const dispatch = useDispatch();
   const { drawerOpen, sidebarOpen } = useSelector((state: RootState) => state.ui);
-  const { hasAnyPermission } = usePermission();
+  const { hasAnyPermission, permissions, roles } = usePermission();
   const { t } = useLanguage();
-  const visibleItems = sidebarItems.filter((item) => hasAnyPermission(item.permissions));
-  const sections = groupItems(visibleItems);
+  const primaryDashboardItem: SidebarItem = {
+    icon: "layout",
+    title: "Dashboard",
+    titleKey: "sidebar.dashboard",
+    path: getDashboardPathByRoles(roles, permissions),
+    permissions: [],
+    section: "Dashboards",
+    sectionKey: "sidebar.dashboards",
+  };
+  const featureItems = sidebarItems.filter((item) => {
+    if (item.section === "Dashboards") return false;
+
+    const hasRequiredPermission = hasAnyPermission(item.permissions);
+    const hasRequiredRole =
+      !item.roles?.length || item.roles.some((role) => roles.includes(role));
+
+    return hasRequiredPermission && hasRequiredRole;
+  });
+  const sections = groupItems([primaryDashboardItem, ...featureItems]);
 
   return (
     <>

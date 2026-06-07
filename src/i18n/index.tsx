@@ -30,6 +30,7 @@ export type TranslationKey =
   | "sidebar.admin"
   | "sidebar.adminDashboard"
   | "sidebar.createProject"
+  | "sidebar.dashboard"
   | "sidebar.dashboards"
   | "sidebar.devopsDashboard"
   | "sidebar.pentesterDashboard"
@@ -105,6 +106,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.admin": "Admin",
     "sidebar.adminDashboard": "Admin Dashboard",
     "sidebar.createProject": "Create Project",
+    "sidebar.dashboard": "Dashboard",
     "sidebar.dashboards": "Dashboards",
     "sidebar.devopsDashboard": "DevOps Dashboard",
     "sidebar.pentesterDashboard": "Pentester Dashboard",
@@ -182,6 +184,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.admin": "مدیریت",
     "sidebar.adminDashboard": "داشبورد مدیریت",
     "sidebar.createProject": "ایجاد پروژه",
+    "sidebar.dashboard": "داشبورد",
     "sidebar.dashboards": "داشبوردها",
     "sidebar.devopsDashboard": "داشبورد دواپس",
     "sidebar.pentesterDashboard": "داشبورد تست نفوذ",
