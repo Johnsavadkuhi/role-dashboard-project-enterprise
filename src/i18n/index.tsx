@@ -28,6 +28,7 @@ export type TranslationKey =
   | "sidebar.account"
   | "sidebar.admin"
   | "sidebar.adminDashboard"
+  | "sidebar.createProject"
   | "sidebar.dashboards"
   | "sidebar.devopsDashboard"
   | "sidebar.pentesterDashboard"
@@ -48,7 +49,31 @@ export type TranslationKey =
   | "userAccess.saveSuccess"
   | "userAccess.title"
   | "userAccess.userState"
-  | "userAccess.users";
+  | "userAccess.users"
+  | "projectCreate.actions.cancel"
+  | "projectCreate.actions.submit"
+  | "projectCreate.description"
+  | "projectCreate.fields.client"
+  | "projectCreate.fields.discipline"
+  | "projectCreate.fields.dueDate"
+  | "projectCreate.fields.environment"
+  | "projectCreate.fields.name"
+  | "projectCreate.fields.owner"
+  | "projectCreate.fields.priority"
+  | "projectCreate.fields.repository"
+  | "projectCreate.fields.scope"
+  | "projectCreate.help"
+  | "projectCreate.options.devops"
+  | "projectCreate.options.high"
+  | "projectCreate.options.low"
+  | "projectCreate.options.medium"
+  | "projectCreate.options.platform"
+  | "projectCreate.options.quality"
+  | "projectCreate.options.security"
+  | "projectCreate.sections.delivery"
+  | "projectCreate.sections.identity"
+  | "projectCreate.success"
+  | "projectCreate.title";
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
   en: {
@@ -77,6 +102,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.account": "Account",
     "sidebar.admin": "Admin",
     "sidebar.adminDashboard": "Admin Dashboard",
+    "sidebar.createProject": "Create Project",
     "sidebar.dashboards": "Dashboards",
     "sidebar.devopsDashboard": "DevOps Dashboard",
     "sidebar.pentesterDashboard": "Pentester Dashboard",
@@ -99,6 +125,32 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "userAccess.title": "User Access Management",
     "userAccess.userState": "User State",
     "userAccess.users": "Users",
+    "projectCreate.actions.cancel": "Cancel",
+    "projectCreate.actions.submit": "Create Project",
+    "projectCreate.description":
+      "Create a new project workspace for security, quality, DevOps, or platform delivery.",
+    "projectCreate.fields.client": "Client",
+    "projectCreate.fields.discipline": "Discipline",
+    "projectCreate.fields.dueDate": "Due date",
+    "projectCreate.fields.environment": "Environment",
+    "projectCreate.fields.name": "Project name",
+    "projectCreate.fields.owner": "Owner",
+    "projectCreate.fields.priority": "Priority",
+    "projectCreate.fields.repository": "Repository",
+    "projectCreate.fields.scope": "Scope",
+    "projectCreate.help":
+      "Only administrators can create projects. Assignment and review workflows can be handled after the project exists.",
+    "projectCreate.options.devops": "DevOps",
+    "projectCreate.options.high": "High",
+    "projectCreate.options.low": "Low",
+    "projectCreate.options.medium": "Medium",
+    "projectCreate.options.platform": "Platform",
+    "projectCreate.options.quality": "Quality",
+    "projectCreate.options.security": "Security",
+    "projectCreate.sections.delivery": "Delivery details",
+    "projectCreate.sections.identity": "Project identity",
+    "projectCreate.success": "Project draft created",
+    "projectCreate.title": "Create Project",
   },
   fa: {
     "app.name": "سامانه امنیت",
@@ -126,6 +178,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.account": "حساب کاربری",
     "sidebar.admin": "مدیریت",
     "sidebar.adminDashboard": "داشبورد مدیریت",
+    "sidebar.createProject": "ایجاد پروژه",
     "sidebar.dashboards": "داشبوردها",
     "sidebar.devopsDashboard": "داشبورد دواپس",
     "sidebar.pentesterDashboard": "داشبورد تست نفوذ",
@@ -148,6 +201,32 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "userAccess.title": "مدیریت دسترسی کاربر",
     "userAccess.userState": "وضعیت کاربر",
     "userAccess.users": "کاربران",
+    "projectCreate.actions.cancel": "انصراف",
+    "projectCreate.actions.submit": "ایجاد پروژه",
+    "projectCreate.description":
+      "یک فضای کاری پروژه برای امنیت، کیفیت، دواپس یا تحویل پلتفرم ایجاد کنید.",
+    "projectCreate.fields.client": "کارفرما",
+    "projectCreate.fields.discipline": "حوزه",
+    "projectCreate.fields.dueDate": "تاریخ سررسید",
+    "projectCreate.fields.environment": "محیط",
+    "projectCreate.fields.name": "نام پروژه",
+    "projectCreate.fields.owner": "مالک",
+    "projectCreate.fields.priority": "اولویت",
+    "projectCreate.fields.repository": "مخزن کد",
+    "projectCreate.fields.scope": "محدوده",
+    "projectCreate.help":
+      "فقط مدیران اصلی می توانند پروژه ایجاد کنند. تخصیص و بازبینی بعد از ایجاد پروژه انجام می شود.",
+    "projectCreate.options.devops": "دواپس",
+    "projectCreate.options.high": "زیاد",
+    "projectCreate.options.low": "کم",
+    "projectCreate.options.medium": "متوسط",
+    "projectCreate.options.platform": "پلتفرم",
+    "projectCreate.options.quality": "کیفیت",
+    "projectCreate.options.security": "امنیت",
+    "projectCreate.sections.delivery": "جزئیات تحویل",
+    "projectCreate.sections.identity": "مشخصات پروژه",
+    "projectCreate.success": "پیش نویس پروژه ایجاد شد",
+    "projectCreate.title": "ایجاد پروژه",
   },
 };
 

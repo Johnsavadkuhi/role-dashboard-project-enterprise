@@ -12,6 +12,8 @@ export const PERMISSIONS = {
   USERS_UPDATE: "users.update",
   USERS_DELETE: "users.delete",
 
+  PROJECTS_CREATE: "projects.create",
+
   VULNERABILITIES_READ: "vulnerabilities.read",
   VULNERABILITIES_CREATE: "vulnerabilities.create",
   VULNERABILITIES_UPDATE: "vulnerabilities.update",

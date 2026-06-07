@@ -10,12 +10,17 @@ import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
 import { renderWithProviders } from "@/test/renderWithProviders";
-import { adminAuthState, qaAuthState, securityProjectManagerAuthState } from "@/test/testUsers";
+import {
+  adminAuthState,
+  qaAuthState,
+  securityProjectManagerAuthState,
+} from "@/test/testUsers";
 
 describe("permission mapping", () => {
   it("admin receives all permissions", () => {
     const permissions = getPermissionsFromRoles([ROLES.ADMIN]);
     expect(permissions).toContain(PERMISSIONS.USERS_DELETE);
+    expect(permissions).toContain(PERMISSIONS.PROJECTS_CREATE);
     expect(permissions).toContain(PERMISSIONS.QA_DASHBOARD_READ);
     expect(permissions).toContain(PERMISSIONS.SECURITY_REPORTS_SUBMIT_FOR_APPROVAL);
     expect(permissions).toContain(PERMISSIONS.QUALITY_REPORTS_SUBMIT_FOR_APPROVAL);
@@ -61,7 +66,9 @@ describe("route guards", () => {
   it("allows users with required permission", () => {
     renderWithProviders(
       <Routes>
-        <Route element={<PermissionRoute permissions={[PERMISSIONS.QA_DASHBOARD_READ]} />}>
+        <Route
+          element={<PermissionRoute permissions={[PERMISSIONS.QA_DASHBOARD_READ]} />}
+        >
           <Route path="/qa" element={<div>QA Page</div>} />
         </Route>
         <Route path="/unauthorized" element={<div>Unauthorized</div>} />
@@ -74,7 +81,9 @@ describe("route guards", () => {
   it("blocks users without required permission", () => {
     renderWithProviders(
       <Routes>
-        <Route element={<PermissionRoute permissions={[PERMISSIONS.ADMIN_DASHBOARD_READ]} />}>
+        <Route
+          element={<PermissionRoute permissions={[PERMISSIONS.ADMIN_DASHBOARD_READ]} />}
+        >
           <Route path="/admin" element={<div>Admin Page</div>} />
         </Route>
         <Route path="/unauthorized" element={<div>Unauthorized</div>} />
@@ -110,13 +119,21 @@ describe("permission UI", () => {
   });
 
   it("Sidebar only shows links allowed by current permissions", () => {
-    renderWithProviders(<Sidebar />, { preloadedState: { auth: qaAuthState, ui: { sidebarOpen: true, theme: "light" } } });
+    renderWithProviders(<Sidebar />, {
+      preloadedState: { auth: qaAuthState, ui: { sidebarOpen: true, theme: "light" } },
+    });
     expect(screen.getByText("QA Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("Create Project")).not.toBeInTheDocument();
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
   });
 
   it("Sidebar shows the security manager dashboard for security project managers", () => {
-    renderWithProviders(<Sidebar />, { preloadedState: { auth: securityProjectManagerAuthState, ui: { sidebarOpen: true, theme: "light" } } });
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: securityProjectManagerAuthState,
+        ui: { sidebarOpen: true, theme: "light" },
+      },
+    });
     expect(screen.getByText("Security Manager Dashboard")).toBeInTheDocument();
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
   });

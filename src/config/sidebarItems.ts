@@ -93,6 +93,14 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.workspace",
   },
   {
+    title: "Create Project",
+    titleKey: "sidebar.createProject",
+    path: "/projects/create",
+    permissions: [PERMISSIONS.PROJECTS_CREATE],
+    section: "Workspace",
+    sectionKey: "sidebar.workspace",
+  },
+  {
     title: "Profile",
     titleKey: "sidebar.profile",
     path: "/profile",

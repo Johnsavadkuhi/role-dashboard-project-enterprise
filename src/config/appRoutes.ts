@@ -22,6 +22,7 @@ const QualityProjectManagerDashboard = lazy(
 const Profile = lazy(() => import("@/pages/shared/Profile"));
 const Settings = lazy(() => import("@/pages/shared/Settings"));
 const Projects = lazy(() => import("@/pages/shared/Projects"));
+const CreateProject = lazy(() => import("@/pages/shared/CreateProject"));
 
 const projectRoutePermissions = [
   PERMISSIONS.ADMIN_DASHBOARD_READ,
@@ -74,6 +75,11 @@ export const protectedRouteConfig = [
     permissions: [PERMISSIONS.QA_DASHBOARD_READ],
   },
   { path: "/projects", element: Projects, permissions: projectRoutePermissions },
+  {
+    path: "/projects/create",
+    element: CreateProject,
+    permissions: [PERMISSIONS.PROJECTS_CREATE],
+  },
   { path: "/profile", element: Profile, permissions: [] },
   { path: "/settings", element: Settings, permissions: [] },
 ];
