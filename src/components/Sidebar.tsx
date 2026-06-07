@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Box,
   CloseButton,
@@ -14,6 +14,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
 import { sidebarItems, type SidebarItem } from "@/config/sidebarItems";
+import { PERMISSIONS } from "@/constants/permissions";
+import { ROLES } from "@/constants/roles";
 import { closeDrawer, openDrawer } from "@/features/ui/uiSlice";
 import { usePermission } from "@/hooks/usePermission";
 import { useLanguage } from "@/i18n";
@@ -21,7 +23,69 @@ import { getDashboardPathByRoles } from "@/utils/dashboard";
 
 type IconName = SidebarItem["icon"];
 
-const sectionOrder = ["Dashboards", "Workspace", "Admin", "Account"];
+const sectionOrder = [
+  "Dashboards",
+  "Admin",
+  "Security Manager",
+  "Pentester",
+  "DevOps",
+  "Representative",
+  "Quality Manager",
+  "Quality Assurance",
+  "Workspace",
+  "Account",
+];
+
+const roleFeatureSections: Array<{
+  icon: SidebarItem["icon"];
+  permission: string;
+  role: string;
+  section: string;
+  sectionKey: SidebarItem["sectionKey"];
+}> = [
+  {
+    icon: "shield",
+    permission: PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ,
+    role: ROLES.SECURITY_PROJECT_MANAGER,
+    section: "Security Manager",
+    sectionKey: "sidebar.roleSecurityManager",
+  },
+  {
+    icon: "target",
+    permission: PERMISSIONS.PENTEST_DASHBOARD_READ,
+    role: ROLES.PENTESTER,
+    section: "Pentester",
+    sectionKey: "sidebar.rolePentester",
+  },
+  {
+    icon: "server",
+    permission: PERMISSIONS.DEVOPS_DASHBOARD_READ,
+    role: ROLES.DEVOPS,
+    section: "DevOps",
+    sectionKey: "sidebar.roleDevops",
+  },
+  {
+    icon: "briefcase",
+    permission: PERMISSIONS.REPRESENTATIVE_DASHBOARD_READ,
+    role: ROLES.REPRESENTATIVE,
+    section: "Representative",
+    sectionKey: "sidebar.roleRepresentative",
+  },
+  {
+    icon: "clipboard",
+    permission: PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ,
+    role: ROLES.QUALITY_PROJECT_MANAGER,
+    section: "Quality Manager",
+    sectionKey: "sidebar.roleQualityManager",
+  },
+  {
+    icon: "check",
+    permission: PERMISSIONS.QA_DASHBOARD_READ,
+    role: ROLES.QA,
+    section: "Quality Assurance",
+    sectionKey: "sidebar.roleQa",
+  },
+];
 
 const iconPaths: Record<string, string[]> = {
   briefcase: [
@@ -96,6 +160,8 @@ function NavigationPanel({
   sections: Array<[string, SidebarItem[]]>;
 }) {
   const { t } = useLanguage();
+  const location = useLocation();
+  const activePath = `${location.pathname}${location.search}`;
 
   return (
     <Flex direction="column" h="full" minH={0} className="enterprise-nav">
@@ -171,7 +237,14 @@ function NavigationPanel({
                   },
                 }}
               >
-                <NavLink to={item.path} end onClick={onNavigate}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive && activePath === item.path ? "active" : undefined
+                  }
+                  end
+                  onClick={onNavigate}
+                >
                   <HStack
                     className="nav-item"
                     position="relative"
@@ -239,6 +312,7 @@ export default function Sidebar() {
   };
   const featureItems = sidebarItems.filter((item) => {
     if (item.section === "Dashboards") return false;
+    if (item.section === "Workspace" && item.path === "/projects") return false;
 
     const hasRequiredPermission = hasAnyPermission(item.permissions);
     const hasRequiredRole =
@@ -246,7 +320,26 @@ export default function Sidebar() {
 
     return hasRequiredPermission && hasRequiredRole;
   });
-  const sections = groupItems([primaryDashboardItem, ...featureItems]);
+  const roleFeatureItems: SidebarItem[] = roleFeatureSections
+    .filter(
+      (section) =>
+        roles.includes(section.role) && permissions.includes(section.permission)
+    )
+    .map((section) => ({
+      icon: section.icon,
+      title: "Projects",
+      titleKey: "sidebar.projects",
+      path: `/projects?role=${section.role}`,
+      permissions: [section.permission],
+      roles: [section.role],
+      section: section.section,
+      sectionKey: section.sectionKey,
+    }));
+  const sections = groupItems([
+    primaryDashboardItem,
+    ...featureItems,
+    ...roleFeatureItems,
+  ]);
 
   return (
     <>

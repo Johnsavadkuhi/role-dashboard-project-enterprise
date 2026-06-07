@@ -164,6 +164,33 @@ describe("permission UI", () => {
     expect(screen.queryByText("Security Manager Dashboard")).not.toBeInTheDocument();
   });
 
+  it("Sidebar groups features by assigned roles for multi-role users", () => {
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: {
+          isAuthenticated: true,
+          user: {
+            id: "admin-pentester-test",
+            name: "Admin Pentester Test",
+            username: "admin.pentester.test",
+            roles: [ROLES.ADMIN, ROLES.PENTESTER],
+            permissions: getPermissionsFromRoles([ROLES.ADMIN, ROLES.PENTESTER]),
+          },
+        },
+        ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
+      },
+    });
+
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Admin")).toBeInTheDocument();
+    expect(screen.getByText("Pentester")).toBeInTheDocument();
+    expect(screen.getByText("User Management")).toBeInTheDocument();
+    expect(screen.getByText("Create Project")).toBeInTheDocument();
+    expect(screen.getByText("Projects")).toBeInTheDocument();
+    expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pentester Dashboard")).not.toBeInTheDocument();
+  });
+
   it("Sidebar shows a single dashboard entry for security project managers", () => {
     renderWithProviders(<Sidebar />, {
       preloadedState: {

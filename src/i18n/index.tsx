@@ -39,6 +39,12 @@ export type TranslationKey =
   | "sidebar.qaDashboard"
   | "sidebar.qualityManagerDashboard"
   | "sidebar.representativeDashboard"
+  | "sidebar.roleDevops"
+  | "sidebar.rolePentester"
+  | "sidebar.roleQa"
+  | "sidebar.roleQualityManager"
+  | "sidebar.roleRepresentative"
+  | "sidebar.roleSecurityManager"
   | "sidebar.securityManagerDashboard"
   | "sidebar.settings"
   | "sidebar.userManagement"
@@ -115,6 +121,12 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.qaDashboard": "QA Dashboard",
     "sidebar.qualityManagerDashboard": "Quality Manager Dashboard",
     "sidebar.representativeDashboard": "Representative Dashboard",
+    "sidebar.roleDevops": "DevOps",
+    "sidebar.rolePentester": "Pentester",
+    "sidebar.roleQa": "Quality Assurance",
+    "sidebar.roleQualityManager": "Quality Manager",
+    "sidebar.roleRepresentative": "Representative",
+    "sidebar.roleSecurityManager": "Security Manager",
     "sidebar.securityManagerDashboard": "Security Manager Dashboard",
     "sidebar.settings": "Settings",
     "sidebar.userManagement": "User Management",
@@ -193,6 +205,12 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "sidebar.qaDashboard": "داشبورد کنترل کیفیت",
     "sidebar.qualityManagerDashboard": "داشبورد مدیر کیفیت",
     "sidebar.representativeDashboard": "داشبورد نماینده",
+    "sidebar.roleDevops": "دواپس",
+    "sidebar.rolePentester": "تست نفوذ",
+    "sidebar.roleQa": "کنترل کیفیت",
+    "sidebar.roleQualityManager": "مدیر کیفیت",
+    "sidebar.roleRepresentative": "نماینده",
+    "sidebar.roleSecurityManager": "مدیر امنیت",
     "sidebar.securityManagerDashboard": "داشبورد مدیر امنیت",
     "sidebar.settings": "تنظیمات",
     "sidebar.userManagement": "مدیریت کاربران",
