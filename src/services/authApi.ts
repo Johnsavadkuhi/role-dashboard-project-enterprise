@@ -42,7 +42,6 @@ const normalizeAuthUser = (user: BackendUser): User => {
     ...user,
     id: user.id || "",
     name: displayName,
-    email: user.email || user.username || "",
     roles: Array.isArray(user.roles) ? user.roles : [],
     permissions: Array.isArray(user.permissions) ? user.permissions : [],
   };

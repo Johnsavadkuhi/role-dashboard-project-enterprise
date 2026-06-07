@@ -17,6 +17,12 @@ export const sidebarItems = [
     section: "Dashboards",
   },
   {
+    title: "User Management",
+    path: "/admin/users",
+    permissions: [PERMISSIONS.USERS_READ],
+    section: "Admin",
+  },
+  {
     title: "Security Manager Dashboard",
     path: "/security-manager",
     permissions: [PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ],

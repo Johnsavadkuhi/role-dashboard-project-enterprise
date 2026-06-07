@@ -12,13 +12,29 @@ export default function Profile() {
       <SimpleGrid columns={{ base: 1, lg: 2 }} gap={5}>
         <Card title="User Info">
           <VStack align="stretch" gap={3}>
-            <Text><strong>Name:</strong> {user?.name}</Text>
-            <Text><strong>Email:</strong> {user?.email}</Text>
-            <Wrap>{roles.map((role) => <WrapItem key={role}><Badge>{role}</Badge></WrapItem>)}</Wrap>
+            <Text>
+              <strong>Name:</strong> {user?.name}
+            </Text>
+            <Text>
+              <strong>Username:</strong> {user?.username}
+            </Text>
+            <Wrap>
+              {roles.map((role) => (
+                <WrapItem key={role}>
+                  <Badge>{role}</Badge>
+                </WrapItem>
+              ))}
+            </Wrap>
           </VStack>
         </Card>
         <Card title="Permissions">
-          <Wrap>{permissions.map((permission) => <WrapItem key={permission}><Badge>{permission}</Badge></WrapItem>)}</Wrap>
+          <Wrap>
+            {permissions.map((permission) => (
+              <WrapItem key={permission}>
+                <Badge>{permission}</Badge>
+              </WrapItem>
+            ))}
+          </Wrap>
         </Card>
       </SimpleGrid>
     </VStack>

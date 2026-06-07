@@ -10,9 +10,15 @@ import { adminAuthState } from "@/test/testUsers";
 describe("RolePermissionManager", () => {
   it("renders users and saves changed permissions", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<><Toaster /><RolePermissionManager users={mockUsers} /></>, { preloadedState: { auth: adminAuthState } });
+    renderWithProviders(
+      <>
+        <Toaster />
+        <RolePermissionManager users={mockUsers} />
+      </>,
+      { preloadedState: { auth: adminAuthState } }
+    );
     expect(screen.getAllByText("Admin User").length).toBeGreaterThan(0);
     await user.click(screen.getByRole("button", { name: "Save Access" }));
-    expect(await screen.findByText("User roles and permissions updated")).toBeInTheDocument();
+    expect(await screen.findByText("User access updated")).toBeInTheDocument();
   });
 });

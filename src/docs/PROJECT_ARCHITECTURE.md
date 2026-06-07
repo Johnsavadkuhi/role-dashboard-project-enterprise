@@ -296,7 +296,7 @@ src/pages/public/Signup.tsx
 Validation checks:
 
 - Name required.
-- Email format.
+- Username minimum length.
 - Password minimum length.
 - At least one role.
 - Avatar required.

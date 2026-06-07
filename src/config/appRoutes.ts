@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { PERMISSIONS } from "@/constants/permissions";
 
 const AdminDashboard = lazy(() => import("@/modules/admin/pages/AdminDashboard"));
+const AdminUsers = lazy(() => import("@/modules/admin/pages/AdminUsers"));
 const PentesterDashboard = lazy(
   () => import("@/modules/pentester/pages/PentesterDashboard")
 );
@@ -36,6 +37,11 @@ export const protectedRouteConfig = [
     path: "/admin",
     element: AdminDashboard,
     permissions: [PERMISSIONS.ADMIN_DASHBOARD_READ],
+  },
+  {
+    path: "/admin/users",
+    element: AdminUsers,
+    permissions: [PERMISSIONS.USERS_READ],
   },
   {
     path: "/security-manager",

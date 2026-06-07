@@ -6,7 +6,9 @@ export const adminAuthState = {
   user: {
     id: "admin-test",
     name: "Admin Test",
-    email: "admin@test.local",
+    firstName: "Admin",
+    lastName: "Test",
+    username: "admin.test",
     roles: [ROLES.ADMIN],
     permissions: getPermissionsFromRoles([ROLES.ADMIN]),
   },
@@ -17,7 +19,9 @@ export const qaAuthState = {
   user: {
     id: "qa-test",
     name: "QA Test",
-    email: "qa@test.local",
+    firstName: "QA",
+    lastName: "Test",
+    username: "qa.test",
     roles: [ROLES.QA],
     permissions: getPermissionsFromRoles([ROLES.QA]),
   },
@@ -28,7 +32,9 @@ export const securityProjectManagerAuthState = {
   user: {
     id: "security-manager-test",
     name: "Security Manager Test",
-    email: "security.manager@test.local",
+    firstName: "Security Manager",
+    lastName: "Test",
+    username: "security.manager.test",
     roles: [ROLES.SECURITY_PROJECT_MANAGER],
     permissions: getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]),
   },
@@ -39,7 +45,9 @@ export const qualityProjectManagerAuthState = {
   user: {
     id: "quality-manager-test",
     name: "Quality Manager Test",
-    email: "quality.manager@test.local",
+    firstName: "Quality Manager",
+    lastName: "Test",
+    username: "quality.manager.test",
     roles: [ROLES.QUALITY_PROJECT_MANAGER],
     permissions: getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]),
   },

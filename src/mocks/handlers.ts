@@ -24,12 +24,14 @@ export const handlers = [
     }
 
     const user = mockUsers.find(
-      (item) => item.email === body.username || item.name === body.username
+      (item) => item.username === body.username || item.name === body.username
     ) ||
       mockUsers[0] || {
         id: "1",
         name: "Admin User",
-        email: `${body.username}@example.com`,
+        firstName: "Admin",
+        lastName: "User",
+        username: body.username,
         roles: [ROLES.ADMIN],
         permissions: getPermissionsFromRoles([ROLES.ADMIN]),
       };
@@ -51,9 +53,12 @@ export const handlers = [
     const user: User = {
       id: crypto.randomUUID(),
       name: `${body.firstName || "New"} ${body.lastName || "User"}`,
-      email: body.username ? `${body.username}@example.com` : "new@example.com",
+      firstName: body.firstName || "New",
+      lastName: body.lastName || "User",
+      username: body.username || "new.user",
       roles,
       permissions,
+      status: "Active",
       avatarUrl: body.avatarUrl,
     };
     upsertMockUser(user);

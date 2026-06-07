@@ -3,16 +3,17 @@ import { PERMISSIONS } from "@/constants/permissions";
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+export type UserStatus = "Active" | "Inactive";
 
 export type User = {
   id: string;
   name: string;
-  email: string;
   firstName?: string;
   lastName?: string;
   username?: string;
   roles: Role[];
   permissions: Permission[];
+  status?: UserStatus;
   avatarUrl?: string;
 };
 
@@ -33,10 +34,13 @@ export type ApiError = {
 
 export type UserFormPayload = {
   id?: string;
-  name: string;
-  email: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
   roles: Role[];
   permissions: Permission[];
+  status?: UserStatus;
   avatarUrl?: string;
 };
 
