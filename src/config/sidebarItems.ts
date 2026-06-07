@@ -11,6 +11,7 @@ const projectRoutePermissions = [
 ];
 
 type SidebarItem = {
+  icon: string;
   title: string;
   titleKey: TranslationKey;
   path: string;
@@ -21,6 +22,7 @@ type SidebarItem = {
 
 export const sidebarItems: SidebarItem[] = [
   {
+    icon: "layout",
     title: "Admin Dashboard",
     titleKey: "sidebar.adminDashboard",
     path: "/admin",
@@ -29,6 +31,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "users",
     title: "User Management",
     titleKey: "sidebar.userManagement",
     path: "/admin/users",
@@ -37,6 +40,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.admin",
   },
   {
+    icon: "shield",
     title: "Security Manager Dashboard",
     titleKey: "sidebar.securityManagerDashboard",
     path: "/security-manager",
@@ -45,6 +49,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "target",
     title: "Pentester Dashboard",
     titleKey: "sidebar.pentesterDashboard",
     path: "/pentester",
@@ -53,6 +58,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "server",
     title: "DevOps Dashboard",
     titleKey: "sidebar.devopsDashboard",
     path: "/devops",
@@ -61,6 +67,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "briefcase",
     title: "Representative Dashboard",
     titleKey: "sidebar.representativeDashboard",
     path: "/representative",
@@ -69,6 +76,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "clipboard",
     title: "Quality Manager Dashboard",
     titleKey: "sidebar.qualityManagerDashboard",
     path: "/quality-manager",
@@ -77,6 +85,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "check",
     title: "QA Dashboard",
     titleKey: "sidebar.qaDashboard",
     path: "/qa",
@@ -85,6 +94,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.dashboards",
   },
   {
+    icon: "folder",
     title: "Projects",
     titleKey: "sidebar.projects",
     path: "/projects",
@@ -93,6 +103,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.workspace",
   },
   {
+    icon: "plus",
     title: "Create Project",
     titleKey: "sidebar.createProject",
     path: "/projects/create",
@@ -101,6 +112,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.workspace",
   },
   {
+    icon: "user",
     title: "Profile",
     titleKey: "sidebar.profile",
     path: "/profile",
@@ -109,6 +121,7 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.account",
   },
   {
+    icon: "settings",
     title: "Settings",
     titleKey: "sidebar.settings",
     path: "/settings",

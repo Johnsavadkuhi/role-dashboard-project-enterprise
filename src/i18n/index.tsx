@@ -19,6 +19,7 @@ export type TranslationKey =
   | "nav.toggleSidebar"
   | "nav.logout"
   | "nav.loggedOut"
+  | "nav.console"
   | "notifications.aria"
   | "notifications.emptyDescription"
   | "notifications.emptyTitle"
@@ -92,6 +93,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "nav.toggleSidebar": "Toggle sidebar",
     "nav.logout": "Logout",
     "nav.loggedOut": "Logged out successfully",
+    "nav.console": "Enterprise Console",
     "notifications.aria": "Notifications, {count} unread",
     "notifications.emptyDescription":
       "New project, review, report, and system events will appear here.",
@@ -168,6 +170,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     "nav.toggleSidebar": "باز و بسته کردن منو",
     "nav.logout": "خروج",
     "nav.loggedOut": "با موفقیت خارج شدید",
+    "nav.console": "کنسول سازمانی",
     "notifications.aria": "اعلان ها، {count} خوانده نشده",
     "notifications.emptyDescription":
       "رویدادهای پروژه، بازبینی، گزارش و سیستم اینجا نمایش داده می شوند.",

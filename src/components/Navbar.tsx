@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { Box, Flex, HStack, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import { toggleSidebar } from "@/features/ui/uiSlice";
+import { openDrawer, toggleSidebar } from "@/features/ui/uiSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/i18n";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -32,6 +32,15 @@ export default function Navbar() {
       <HStack gap={4} minW={0}>
         <Button
           variant="ghost"
+          display={{ base: "inline-flex", md: "none" }}
+          aria-label={t("nav.toggleSidebar")}
+          onClick={() => dispatch(openDrawer())}
+        >
+          ☰
+        </Button>
+        <Button
+          variant="ghost"
+          display={{ base: "none", md: "inline-flex" }}
           aria-label={t("nav.toggleSidebar")}
           onClick={() => dispatch(toggleSidebar())}
         >
