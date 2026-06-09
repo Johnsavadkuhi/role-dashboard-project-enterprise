@@ -69,6 +69,15 @@ export const handlers = [
     return HttpResponse.json({ success: true });
   }),
 
+  http.get(endpoint("/auth/csrf-token"), () => {
+    return HttpResponse.json({
+      success: true,
+      data: {
+        csrfToken: "mock-csrf-token",
+      },
+    });
+  }),
+
   http.get(endpoint("/auth/me"), () => {
     return HttpResponse.json(mockUsers[0]);
   }),

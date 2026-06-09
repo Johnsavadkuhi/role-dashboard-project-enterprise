@@ -1,18 +1,97 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
 import { logout } from "@/features/auth/authSlice";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+const CSRF_TOKEN_URL = "/auth/csrf-token";
+const PUBLIC_AUTH_URLS = new Set(["/auth/login", "/auth/register", CSRF_TOKEN_URL]);
+
+type CsrfTokenResponse = {
+  success?: boolean;
+  data?: {
+    csrfToken?: string;
+  };
+  csrfToken?: string;
+};
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: API_BASE_URL,
   credentials: "include",
 });
 
-const baseQueryWithReauth = async (args, api, extraOptions) => {
-  let result = await rawBaseQuery(args, api, extraOptions);
+const getRequestUrl = (args: string | FetchArgs) =>
+  typeof args === "string" ? args : args.url;
 
-  if (result?.error?.status === 401) {
-    const refreshResult = await rawBaseQuery(
+const isProtectedRequest = (args: string | FetchArgs) =>
+  !PUBLIC_AUTH_URLS.has(getRequestUrl(args));
+
+const withCsrfToken = (args: string | FetchArgs, csrfToken: string): FetchArgs => {
+  const requestArgs = typeof args === "string" ? { url: args } : args;
+  const headers = new globalThis.Headers(
+    requestArgs.headers as ConstructorParameters<typeof globalThis.Headers>[0]
+  );
+  headers.set("x-csrf-token", csrfToken);
+
+  return {
+    ...requestArgs,
+    headers,
+  };
+};
+
+const fetchCsrfToken = async (api, extraOptions) => {
+  const result = await rawBaseQuery(CSRF_TOKEN_URL, api, extraOptions);
+
+  if (result.error) {
+    return { error: result.error };
+  }
+
+  const response = result.data as CsrfTokenResponse;
+  const csrfToken = response.data?.csrfToken || response.csrfToken;
+
+  if (!csrfToken) {
+    return {
+      error: {
+        status: "CUSTOM_ERROR",
+        error: "CSRF token response did not include a csrfToken",
+      } satisfies FetchBaseQueryError,
+    };
+  }
+
+  return { data: csrfToken };
+};
+
+const baseQueryWithCsrf: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  if (!isProtectedRequest(args)) {
+    return rawBaseQuery(args, api, extraOptions);
+  }
+
+  const csrfResult = await fetchCsrfToken(api, extraOptions);
+
+  if ("error" in csrfResult) {
+    return { error: csrfResult.error };
+  }
+
+  return rawBaseQuery(withCsrfToken(args, csrfResult.data), api, extraOptions);
+};
+
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await baseQueryWithCsrf(args, api, extraOptions);
+
+  if (result?.error?.status === 401 && isProtectedRequest(args)) {
+    const refreshResult = await baseQueryWithCsrf(
       {
         url: "/auth/refresh-token",
         method: "POST",
@@ -22,7 +101,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     );
 
     if (!refreshResult.error) {
-      result = await rawBaseQuery(args, api, extraOptions);
+      result = await baseQueryWithCsrf(args, api, extraOptions);
     } else {
       api.dispatch(logout());
     }
