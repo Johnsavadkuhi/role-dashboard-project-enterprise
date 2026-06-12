@@ -1,9 +1,20 @@
 import { ROLES } from "@/constants/roles";
-import { PERMISSIONS } from "@/constants/permissions";
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
-export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
+export type Permission = string;
 export type UserStatus = "Active" | "Inactive";
+export type RoleCatalogItem = {
+  id: string;
+  key: Role;
+  name: string;
+  permissions: string[];
+  isSystem: boolean;
+};
+
+export type RolesAndPermissions = {
+  roles: RoleCatalogItem[];
+  permissions: string[];
+};
 
 export type User = {
   id: string;

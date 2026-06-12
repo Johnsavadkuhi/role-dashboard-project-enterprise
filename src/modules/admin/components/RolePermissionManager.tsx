@@ -13,18 +13,21 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { PERMISSIONS } from "@/constants/permissions";
-import { ROLE_LABELS, ROLES } from "@/constants/roles";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 import { useLanguage } from "@/i18n";
-import { useUpdateUserMutation } from "@/services/usersApi";
+import {
+  useGetRolesAndPermissionsQuery,
+  useUpdateUserMutation,
+} from "@/services/usersApi";
 import type { Permission, Role, User, UserStatus } from "@/types";
+import { getPermissionsFromRoleCatalog } from "@/utils/permissionGrants";
+import { getApiErrorMessage } from "@/utils/getApiErrorMessage";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import EmptyState from "@/components/EmptyState";
+import ErrorState from "@/components/ErrorState";
+import LoadingScreen from "@/components/LoadingScreen";
 
-const allRoles = Object.values(ROLES) as Role[];
-const allPermissions = Object.values(PERMISSIONS) as Permission[];
 const userStatuses: UserStatus[] = ["Active", "Inactive"];
 
 const statusPalettes: Record<UserStatus, string> = {
@@ -41,9 +44,50 @@ function toggleValue<T extends string>(list: T[], value: T) {
 }
 
 export default function RolePermissionManager({ users }: { users: User[] }) {
-  const { t } = useLanguage();
   const [selectedUserId, setSelectedUserId] = useState(users[0]?.id || "");
   const selectedUser = users.find((user) => user.id === selectedUserId) || users[0];
+  const editorKey = JSON.stringify([
+    selectedUser?.id,
+    selectedUser?.roles,
+    selectedUser?.permissions,
+    selectedUser?.status,
+  ]);
+
+  return (
+    <RolePermissionEditor
+      key={editorKey}
+      users={users}
+      selectedUser={selectedUser}
+      onSelectUser={setSelectedUserId}
+    />
+  );
+}
+
+function RolePermissionEditor({
+  users,
+  selectedUser,
+  onSelectUser,
+}: {
+  users: User[];
+  selectedUser: User | undefined;
+  onSelectUser: (userId: string) => void;
+}) {
+  const { t } = useLanguage();
+  const {
+    data: rolesAndPermissions,
+    error: rolesError,
+    isLoading: isLoadingRoles,
+    isFetching: isFetchingRoles,
+  } = useGetRolesAndPermissionsQuery();
+  const roleCatalog = rolesAndPermissions?.roles || [];
+  const allRoles = roleCatalog.map((role) => role.key);
+  const allPermissions = useMemo(
+    () => rolesAndPermissions?.permissions || [],
+    [rolesAndPermissions?.permissions]
+  );
+  const roleLabels = Object.fromEntries(
+    roleCatalog.map((role) => [role.key, role.name])
+  ) as Record<Role, string>;
 
   const [draftRoles, setDraftRoles] = useState<Role[]>(selectedUser?.roles || []);
   const [draftPermissions, setDraftPermissions] = useState<Permission[]>(
@@ -61,36 +105,59 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
       groups[group].push(permission);
       return groups;
     }, {});
-  }, []);
+  }, [allPermissions]);
 
   const handleSelectUser = (userId: string) => {
-    const user = users.find((item) => item.id === userId);
-    setSelectedUserId(userId);
-    setDraftRoles(user?.roles || []);
-    setDraftPermissions(user?.permissions || []);
-    setDraftStatus(user?.status || "Active");
+    onSelectUser(userId);
   };
 
   const handleToggleRole = (role: Role) => {
     const nextRoles = toggleValue(draftRoles, role);
     setDraftRoles(nextRoles);
-    setDraftPermissions(getPermissionsFromRoles(nextRoles) as Permission[]);
+    setDraftPermissions(getPermissionsFromRoleCatalog(nextRoles, roleCatalog));
   };
 
   const handleSave = async () => {
     if (!selectedUser) return;
+    if (draftRoles.length === 0) {
+      toast.error("Select at least one role before saving.");
+      return;
+    }
+
     try {
-      await updateUser({
-        ...selectedUser,
+      const updatedUser = await updateUser({
+        id: selectedUser.id,
         roles: draftRoles,
         permissions: draftPermissions,
         status: draftStatus,
       }).unwrap();
+      setDraftRoles(updatedUser.roles || draftRoles);
+      setDraftPermissions(updatedUser.permissions || draftPermissions);
+      setDraftStatus(updatedUser.status || draftStatus);
       toast.success(t("userAccess.saveSuccess"));
     } catch (error: any) {
-      toast.error(error?.data?.message || t("userAccess.saveError"));
+      toast.error(getApiErrorMessage(error, t("userAccess.saveError")));
     }
   };
+
+  if (isLoadingRoles) {
+    return <LoadingScreen text="Loading roles and permissions..." />;
+  }
+
+  if (rolesError) {
+    return <ErrorState error={rolesError} />;
+  }
+
+  if (roleCatalog.length === 0) {
+    return (
+      <Card title={t("userAccess.title")}>
+        <EmptyState
+          title="No roles loaded"
+          description="The backend /users/roles endpoint did not return any roles."
+        />
+      </Card>
+    );
+  }
 
   if (!selectedUser) {
     return (
@@ -165,6 +232,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
             </Box>
             <Button
               onClick={handleSave}
+              disabled={isFetchingRoles || isLoading}
               isLoading={isLoading}
               loadingText={t("common.loading")}
             >
@@ -214,10 +282,11 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
                 >
                   <input
                     type="checkbox"
+                    disabled={isLoading}
                     checked={draftRoles.includes(role)}
                     onChange={() => handleToggleRole(role)}
                   />
-                  <Text fontWeight="600">{ROLE_LABELS[role]}</Text>
+                  <Text fontWeight="600">{roleLabels[role] || role}</Text>
                 </Box>
               ))}
             </SimpleGrid>
@@ -259,6 +328,7 @@ export default function RolePermissionManager({ users }: { users: User[] }) {
                       >
                         <input
                           type="checkbox"
+                          disabled={isLoading}
                           checked={draftPermissions.includes(permission)}
                           onChange={() =>
                             setDraftPermissions(toggleValue(draftPermissions, permission))

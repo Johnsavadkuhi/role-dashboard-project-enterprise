@@ -20,6 +20,7 @@ import { closeDrawer, openDrawer } from "@/features/ui/uiSlice";
 import { usePermission } from "@/hooks/usePermission";
 import { useLanguage } from "@/i18n";
 import { getDashboardPathByRoles } from "@/utils/dashboard";
+import { hasPermissionGrant } from "@/utils/permissionGrants";
 
 type IconName = SidebarItem["icon"];
 
@@ -43,6 +44,13 @@ const roleFeatureSections: Array<{
   section: string;
   sectionKey: SidebarItem["sectionKey"];
 }> = [
+  {
+    icon: "folder",
+    permission: PERMISSIONS.ADMIN_ALL,
+    role: ROLES.ADMIN,
+    section: "Admin",
+    sectionKey: "sidebar.admin",
+  },
   {
     icon: "shield",
     permission: PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ,
@@ -323,7 +331,8 @@ export default function Sidebar() {
   const roleFeatureItems: SidebarItem[] = roleFeatureSections
     .filter(
       (section) =>
-        roles.includes(section.role) && permissions.includes(section.permission)
+        roles.includes(section.role) &&
+        hasPermissionGrant(permissions, section.permission)
     )
     .map((section) => ({
       icon: section.icon,

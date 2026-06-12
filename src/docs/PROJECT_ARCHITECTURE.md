@@ -218,11 +218,8 @@ The UI uses:
 
 ```txt
 useGetUsersQuery
+useGetRolesAndPermissionsQuery
 useUpdateUserMutation
-ROLES
-ROLE_LABELS
-PERMISSIONS
-getPermissionsFromRoles
 ```
 
 Important rule:

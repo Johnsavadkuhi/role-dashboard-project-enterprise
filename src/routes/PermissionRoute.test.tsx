@@ -6,9 +6,9 @@ import ProtectedRoute from "@/routes/ProtectedRoute";
 import PublicRoute from "@/routes/PublicRoute";
 import PermissionGate from "@/components/PermissionGate";
 import Sidebar from "@/components/Sidebar";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 import { ROLES } from "@/constants/roles";
 import { PERMISSIONS } from "@/constants/permissions";
+import { hasPermissionGrant } from "@/utils/permissionGrants";
 import { renderWithProviders } from "@/test/renderWithProviders";
 import {
   adminAuthState,
@@ -17,35 +17,17 @@ import {
 } from "@/test/testUsers";
 
 describe("permission mapping", () => {
-  it("admin receives all permissions", () => {
-    const permissions = getPermissionsFromRoles([ROLES.ADMIN]);
-    expect(permissions).toContain(PERMISSIONS.USERS_DELETE);
-    expect(permissions).toContain(PERMISSIONS.PROJECTS_CREATE);
-    expect(permissions).toContain(PERMISSIONS.QA_DASHBOARD_READ);
-    expect(permissions).toContain(PERMISSIONS.SECURITY_REPORTS_SUBMIT_FOR_APPROVAL);
-    expect(permissions).toContain(PERMISSIONS.QUALITY_REPORTS_SUBMIT_FOR_APPROVAL);
+  it("admin wildcard grants concrete frontend permissions", () => {
+    const permissions = [PERMISSIONS.ADMIN_ALL];
+    expect(hasPermissionGrant(permissions, PERMISSIONS.USERS_DELETE)).toBe(true);
+    expect(hasPermissionGrant(permissions, PERMISSIONS.PROJECTS_CREATE)).toBe(true);
+    expect(hasPermissionGrant(permissions, PERMISSIONS.QA_DASHBOARD_READ)).toBe(true);
   });
 
-  it("multi-role users receive merged permissions", () => {
-    const permissions = getPermissionsFromRoles([ROLES.PENTESTER, ROLES.QA]);
-    expect(permissions).toContain(PERMISSIONS.PENTEST_DASHBOARD_READ);
-    expect(permissions).toContain(PERMISSIONS.QA_DASHBOARD_READ);
-  });
-
-  it("security project managers can assign work and review findings", () => {
-    const permissions = getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]);
-    expect(permissions).toContain(PERMISSIONS.SECURITY_PROJECTS_ASSIGN);
-    expect(permissions).toContain(PERMISSIONS.SECURITY_PROJECTS_ASSIGN_SELF);
-    expect(permissions).toContain(PERMISSIONS.SECURITY_FINDINGS_APPROVE);
-    expect(permissions).toContain(PERMISSIONS.SECURITY_FINDINGS_REJECT);
-  });
-
-  it("quality project managers can assign work and review results", () => {
-    const permissions = getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]);
-    expect(permissions).toContain(PERMISSIONS.QUALITY_PROJECTS_ASSIGN);
-    expect(permissions).toContain(PERMISSIONS.QUALITY_PROJECTS_ASSIGN_SELF);
-    expect(permissions).toContain(PERMISSIONS.QUALITY_RESULTS_APPROVE);
-    expect(permissions).toContain(PERMISSIONS.QUALITY_RESULTS_REJECT);
+  it("concrete permissions remain exact for non-admin users", () => {
+    const permissions = [PERMISSIONS.QA_DASHBOARD_READ];
+    expect(hasPermissionGrant(permissions, PERMISSIONS.QA_DASHBOARD_READ)).toBe(true);
+    expect(hasPermissionGrant(permissions, PERMISSIONS.USERS_DELETE)).toBe(false);
   });
 });
 
@@ -164,6 +146,28 @@ describe("permission UI", () => {
     expect(screen.queryByText("Security Manager Dashboard")).not.toBeInTheDocument();
   });
 
+  it("Sidebar derives admin drawer links when permissions are empty", async () => {
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: {
+          isAuthenticated: true,
+          user: {
+            id: "admin-empty-permissions-test",
+            name: "Admin Empty Permissions Test",
+            username: "admin.empty.permissions.test",
+            roles: [ROLES.ADMIN],
+            permissions: [],
+          },
+        },
+        ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
+      },
+    });
+
+    expect(await screen.findByText("User Management")).toBeInTheDocument();
+    expect(await screen.findByText("Create Project")).toBeInTheDocument();
+    expect(await screen.findByText("Projects")).toBeInTheDocument();
+  });
+
   it("Sidebar groups features by assigned roles for multi-role users", () => {
     renderWithProviders(<Sidebar />, {
       preloadedState: {
@@ -174,7 +178,7 @@ describe("permission UI", () => {
             name: "Admin Pentester Test",
             username: "admin.pentester.test",
             roles: [ROLES.ADMIN, ROLES.PENTESTER],
-            permissions: getPermissionsFromRoles([ROLES.ADMIN, ROLES.PENTESTER]),
+            permissions: [PERMISSIONS.ADMIN_ALL],
           },
         },
         ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
@@ -186,7 +190,7 @@ describe("permission UI", () => {
     expect(screen.getByText("Pentester")).toBeInTheDocument();
     expect(screen.getByText("User Management")).toBeInTheDocument();
     expect(screen.getByText("Create Project")).toBeInTheDocument();
-    expect(screen.getByText("Projects")).toBeInTheDocument();
+    expect(screen.getAllByText("Projects")).toHaveLength(2);
     expect(screen.queryByText("Admin Dashboard")).not.toBeInTheDocument();
     expect(screen.queryByText("Pentester Dashboard")).not.toBeInTheDocument();
   });

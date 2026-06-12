@@ -1,7 +1,120 @@
+import { PERMISSIONS } from "@/constants/permissions";
 import { ROLES } from "@/constants/roles";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 import type { AppNotification } from "@/types/notification";
-import type { User } from "@/types";
+import type { Role, RoleCatalogItem, User } from "@/types";
+
+export const mockRoleCatalog: RoleCatalogItem[] = [
+  {
+    id: "role-admin",
+    key: ROLES.ADMIN,
+    name: "Admin",
+    permissions: [PERMISSIONS.ADMIN_ALL],
+    isSystem: true,
+  },
+  {
+    id: "role-pentester",
+    key: ROLES.PENTESTER,
+    name: "Pentester",
+    permissions: [
+      PERMISSIONS.PENTEST_DASHBOARD_READ,
+      PERMISSIONS.VULNERABILITIES_READ,
+      PERMISSIONS.VULNERABILITIES_CREATE,
+      PERMISSIONS.VULNERABILITIES_UPDATE,
+      PERMISSIONS.REPORTS_EXPORT,
+    ],
+    isSystem: true,
+  },
+  {
+    id: "role-security-project-manager",
+    key: ROLES.SECURITY_PROJECT_MANAGER,
+    name: "Security Project Manager",
+    permissions: [
+      PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ,
+      PERMISSIONS.SECURITY_PROJECTS_READ,
+      PERMISSIONS.SECURITY_PROJECTS_ASSIGN,
+      PERMISSIONS.SECURITY_PROJECTS_ASSIGN_SELF,
+      PERMISSIONS.SECURITY_FINDINGS_REVIEW,
+      PERMISSIONS.SECURITY_FINDINGS_APPROVE,
+      PERMISSIONS.SECURITY_FINDINGS_REJECT,
+      PERMISSIONS.SECURITY_REPORTS_CREATE,
+      PERMISSIONS.SECURITY_REPORTS_SUBMIT_FOR_APPROVAL,
+      PERMISSIONS.PENTEST_DASHBOARD_READ,
+      PERMISSIONS.VULNERABILITIES_READ,
+      PERMISSIONS.VULNERABILITIES_CREATE,
+      PERMISSIONS.VULNERABILITIES_UPDATE,
+    ],
+    isSystem: true,
+  },
+  {
+    id: "role-devops",
+    key: ROLES.DEVOPS,
+    name: "DevOps",
+    permissions: [
+      PERMISSIONS.DEVOPS_DASHBOARD_READ,
+      PERMISSIONS.DEPLOYMENTS_READ,
+      PERMISSIONS.DEPLOYMENTS_CREATE,
+      PERMISSIONS.SERVERS_READ,
+    ],
+    isSystem: true,
+  },
+  {
+    id: "role-representative",
+    key: ROLES.REPRESENTATIVE,
+    name: "Representative",
+    permissions: [
+      PERMISSIONS.REPRESENTATIVE_DASHBOARD_READ,
+      PERMISSIONS.TICKETS_READ,
+      PERMISSIONS.TICKETS_CREATE,
+      PERMISSIONS.TICKETS_UPDATE,
+    ],
+    isSystem: true,
+  },
+  {
+    id: "role-qa",
+    key: ROLES.QA,
+    name: "Quality Assurance",
+    permissions: [
+      PERMISSIONS.QA_DASHBOARD_READ,
+      PERMISSIONS.QA_TEST_CASES_READ,
+      PERMISSIONS.QA_TEST_CASES_CREATE,
+      PERMISSIONS.QA_TEST_CASES_UPDATE,
+      PERMISSIONS.VULNERABILITIES_READ,
+    ],
+    isSystem: true,
+  },
+  {
+    id: "role-quality-project-manager",
+    key: ROLES.QUALITY_PROJECT_MANAGER,
+    name: "Quality Project Manager",
+    permissions: [
+      PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ,
+      PERMISSIONS.QUALITY_PROJECTS_READ,
+      PERMISSIONS.QUALITY_PROJECTS_ASSIGN,
+      PERMISSIONS.QUALITY_PROJECTS_ASSIGN_SELF,
+      PERMISSIONS.QUALITY_RESULTS_REVIEW,
+      PERMISSIONS.QUALITY_RESULTS_APPROVE,
+      PERMISSIONS.QUALITY_RESULTS_REJECT,
+      PERMISSIONS.QUALITY_REPORTS_CREATE,
+      PERMISSIONS.QUALITY_REPORTS_SUBMIT_FOR_APPROVAL,
+      PERMISSIONS.QA_DASHBOARD_READ,
+      PERMISSIONS.QA_TEST_CASES_READ,
+      PERMISSIONS.QA_TEST_CASES_CREATE,
+      PERMISSIONS.QA_TEST_CASES_UPDATE,
+      PERMISSIONS.VULNERABILITIES_READ,
+    ],
+    isSystem: true,
+  },
+];
+
+export function getMockPermissionsFromRoles(roles: Role[]) {
+  return Array.from(
+    new Set(
+      roles.flatMap(
+        (role) => mockRoleCatalog.find((item) => item.key === role)?.permissions || []
+      )
+    )
+  );
+}
 
 export let mockUsers: User[] = [
   {
@@ -11,7 +124,7 @@ export let mockUsers: User[] = [
     lastName: "User",
     username: "admin.user",
     roles: [ROLES.ADMIN],
-    permissions: getPermissionsFromRoles([ROLES.ADMIN]),
+    permissions: getMockPermissionsFromRoles([ROLES.ADMIN]),
     status: "Active",
     avatarUrl: "https://placehold.co/128x128?text=AU",
   },
@@ -22,7 +135,7 @@ export let mockUsers: User[] = [
     lastName: "QA",
     username: "pentest.qa",
     roles: [ROLES.PENTESTER, ROLES.QA],
-    permissions: getPermissionsFromRoles([ROLES.PENTESTER, ROLES.QA]),
+    permissions: getMockPermissionsFromRoles([ROLES.PENTESTER, ROLES.QA]),
     status: "Active",
     avatarUrl: "https://placehold.co/128x128?text=PQ",
   },
@@ -33,7 +146,7 @@ export let mockUsers: User[] = [
     lastName: "User",
     username: "devops.user",
     roles: [ROLES.DEVOPS],
-    permissions: getPermissionsFromRoles([ROLES.DEVOPS]),
+    permissions: getMockPermissionsFromRoles([ROLES.DEVOPS]),
     status: "Inactive",
     avatarUrl: "https://placehold.co/128x128?text=DU",
   },
@@ -44,7 +157,7 @@ export let mockUsers: User[] = [
     lastName: "Project Manager",
     username: "security.pm",
     roles: [ROLES.SECURITY_PROJECT_MANAGER],
-    permissions: getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]),
+    permissions: getMockPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]),
     status: "Active",
     avatarUrl: "https://placehold.co/128x128?text=SPM",
   },
@@ -55,7 +168,7 @@ export let mockUsers: User[] = [
     lastName: "Project Manager",
     username: "quality.pm",
     roles: [ROLES.QUALITY_PROJECT_MANAGER],
-    permissions: getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]),
+    permissions: getMockPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]),
     status: "Inactive",
     avatarUrl: "https://placehold.co/128x128?text=QPM",
   },

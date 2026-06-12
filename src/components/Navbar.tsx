@@ -3,7 +3,6 @@ import { Box, Flex, HStack, Text, Wrap, WrapItem } from "@chakra-ui/react";
 import { openDrawer, toggleSidebar } from "@/features/ui/uiSlice";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/i18n";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationCenter from "@/components/NotificationCenter";
 import Badge from "@/components/ui/Badge";
@@ -60,7 +59,7 @@ export default function Navbar() {
         </Box>
       </HStack>
       <HStack gap={3}>
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
         <NotificationCenter />
         <LogoutButton />
       </HStack>

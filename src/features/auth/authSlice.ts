@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 
 function safeParse(value, fallback) {
   try {
@@ -42,9 +41,7 @@ const initialState = {
 
 const normalizeUser = (user) => {
   const roles = Array.isArray(user?.roles) ? user.roles : user?.role ? [user.role] : [];
-  const permissions = Array.isArray(user?.permissions)
-    ? user.permissions
-    : getPermissionsFromRoles(roles);
+  const permissions = Array.isArray(user?.permissions) ? user.permissions : [];
 
   return {
     ...user,

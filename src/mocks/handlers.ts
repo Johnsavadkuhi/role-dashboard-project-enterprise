@@ -1,10 +1,12 @@
 import { http, HttpResponse } from "msw";
 import { ROLES } from "@/constants/roles";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
+import { PERMISSIONS } from "@/constants/permissions";
 import {
+  getMockPermissionsFromRoles,
   markAllMockNotificationsRead,
   markMockNotificationRead,
   mockNotifications,
+  mockRoleCatalog,
   mockUsers,
   upsertMockUser,
 } from "@/mocks/data";
@@ -33,7 +35,7 @@ export const handlers = [
         lastName: "User",
         username: body.username,
         roles: [ROLES.ADMIN],
-        permissions: getPermissionsFromRoles([ROLES.ADMIN]),
+        permissions: [PERMISSIONS.ADMIN_ALL],
       };
 
     return HttpResponse.json({ user });
@@ -49,7 +51,7 @@ export const handlers = [
     const roles = body.roles?.length ? body.roles : [ROLES.REPRESENTATIVE];
     const permissions = body.permissions?.length
       ? body.permissions
-      : getPermissionsFromRoles(roles);
+      : getMockPermissionsFromRoles(roles);
     const user: User = {
       id: crypto.randomUUID(),
       name: `${body.firstName || "New"} ${body.lastName || "User"}`,
@@ -88,13 +90,28 @@ export const handlers = [
 
   http.get(endpoint("/users"), () => HttpResponse.json(mockUsers)),
 
+  http.get(endpoint("/users/roles"), () =>
+    HttpResponse.json({
+      success: true,
+      data: {
+        roles: mockRoleCatalog,
+        permissions: Array.from(
+          new Set([
+            ...Object.values(PERMISSIONS),
+            ...mockRoleCatalog.flatMap((role) => role.permissions),
+          ])
+        ),
+      },
+    })
+  ),
+
   http.put(endpoint("/users/:id"), async ({ params, request }) => {
     const body = (await request.json()) as Partial<User>;
     const existing = mockUsers.find((item) => item.id === params.id);
     if (!existing)
       return HttpResponse.json({ message: "User not found" }, { status: 404 });
     const roles = body.roles || existing.roles;
-    const permissions = body.permissions || getPermissionsFromRoles(roles);
+    const permissions = body.permissions || getMockPermissionsFromRoles(roles);
     const updated = upsertMockUser({ ...existing, ...body, roles, permissions });
     return HttpResponse.json(updated);
   }),

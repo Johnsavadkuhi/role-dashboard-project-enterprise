@@ -1,4 +1,5 @@
 export const PERMISSIONS = {
+  ADMIN_ALL: "admin.all",
   ADMIN_DASHBOARD_READ: "admin.dashboard.read",
   PENTEST_DASHBOARD_READ: "pentest.dashboard.read",
   SECURITY_MANAGER_DASHBOARD_READ: "security-manager.dashboard.read",

@@ -37,14 +37,35 @@ const normalizeAuthUser = (user: BackendUser): User => {
     [user.firstName, user.lastName].filter(Boolean).join(" ") ||
     user.username ||
     "";
+  const roles = Array.isArray(user.roles) ? user.roles : [];
+  const permissions = Array.isArray(user.permissions) ? user.permissions : [];
 
   return {
     ...user,
     id: user.id || "",
     name: displayName,
-    roles: Array.isArray(user.roles) ? user.roles : [],
-    permissions: Array.isArray(user.permissions) ? user.permissions : [],
+    roles,
+    permissions,
   };
+};
+
+const normalizeMeResponse = (response: BackendUser | BackendAuthResponse): User => {
+  const authResponse = response as BackendAuthResponse;
+  const user = authResponse.data?.user || authResponse.user;
+
+  if (
+    authResponse.data ||
+    authResponse.user ||
+    "success" in response ||
+    "csrfToken" in response
+  ) {
+    if (!user) {
+      throw new Error("Auth response did not include a user");
+    }
+    return normalizeAuthUser(user);
+  }
+
+  return normalizeAuthUser(response as BackendUser);
 };
 
 const normalizeAuthResponse = (response: BackendAuthResponse): AuthResponse => {
@@ -78,6 +99,7 @@ export const authApi = api.injectEndpoints({
     }),
     getMe: builder.query<AuthResponse["user"], void>({
       query: () => "/auth/me",
+      transformResponse: normalizeMeResponse,
       providesTags: ["Auth"],
     }),
     logoutUser: builder.mutation<{ success: boolean }, void>({

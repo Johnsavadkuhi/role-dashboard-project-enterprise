@@ -7,7 +7,9 @@ import toast from "react-hot-toast";
 import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { useLoginUserMutation } from "@/services/authApi";
+import { useLazyGetRolesAndPermissionsQuery } from "@/services/usersApi";
 import { getDashboardPathByRoles } from "@/utils/dashboard";
+import { getEffectivePermissions } from "@/utils/permissionGrants";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import type { ApiError, AuthResponse } from "@/types";
@@ -30,6 +32,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [getRolesAndPermissions] = useLazyGetRolesAndPermissionsQuery();
 
   const {
     register,
@@ -40,9 +43,23 @@ export default function Login() {
     defaultValues: { username: "", password: "" },
   });
 
-  const saveAuthAndRedirect = (payload: AuthResponse) => {
-    dispatch(loginSuccess(payload));
-    navigate(getDashboardPathByRoles(payload.user.roles, payload.user.permissions));
+  const saveAuthAndRedirect = async (payload: AuthResponse) => {
+    const rolesAndPermissions = payload.user.permissions.length
+      ? undefined
+      : await getRolesAndPermissions()
+          .unwrap()
+          .catch(() => undefined);
+    const user = {
+      ...payload.user,
+      permissions: getEffectivePermissions(
+        payload.user.roles,
+        payload.user.permissions,
+        rolesAndPermissions?.roles
+      ),
+    };
+
+    dispatch(loginSuccess({ ...payload, user }));
+    navigate(getDashboardPathByRoles(user.roles, user.permissions));
     toast.success("Login successful");
   };
 
@@ -60,7 +77,7 @@ export default function Login() {
       return;
     }
 
-    saveAuthAndRedirect(getAuthPayload(response));
+    await saveAuthAndRedirect(getAuthPayload(response));
   };
 
   return (

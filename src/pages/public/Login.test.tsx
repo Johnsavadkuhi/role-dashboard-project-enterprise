@@ -74,4 +74,40 @@ describe("Login page", () => {
     await user.click(screen.getByRole("button", { name: "Login" }));
     expect(await screen.findByText("Pentester Page")).toBeInTheDocument();
   });
+
+  it("derives admin wildcard when the auth response omits permissions", async () => {
+    server.use(
+      http.post(`${apiUrl}/auth/login`, () =>
+        HttpResponse.json({
+          success: true,
+          data: {
+            user: {
+              id: "6a1fbecbd979b652b524c0a2",
+              firstName: "John",
+              lastName: "savadkuhi",
+              username: "admin",
+              roles: ["admin"],
+              sessionVersion: 0,
+              projectIds: [],
+            },
+            csrfToken: "CO2um8UXxNfigSPoPsK030ZQXodZvfqUCwyGcocUUMM",
+          },
+        })
+      )
+    );
+
+    const user = userEvent.setup();
+    renderWithProviders(
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<div>Admin Page</div>} />
+      </Routes>,
+      { route: "/login" }
+    );
+
+    await user.type(screen.getByLabelText("Username"), "admin");
+    await user.type(screen.getByLabelText("Password"), "password123");
+    await user.click(screen.getByRole("button", { name: "Login" }));
+    expect(await screen.findByText("Admin Page")).toBeInTheDocument();
+  });
 });

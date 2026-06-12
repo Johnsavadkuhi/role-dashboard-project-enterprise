@@ -1,5 +1,5 @@
+import { PERMISSIONS } from "@/constants/permissions";
 import { ROLES } from "@/constants/roles";
-import { getPermissionsFromRoles } from "@/constants/rolePermissions";
 
 export const adminAuthState = {
   isAuthenticated: true,
@@ -10,7 +10,7 @@ export const adminAuthState = {
     lastName: "Test",
     username: "admin.test",
     roles: [ROLES.ADMIN],
-    permissions: getPermissionsFromRoles([ROLES.ADMIN]),
+    permissions: [PERMISSIONS.ADMIN_ALL],
   },
 };
 
@@ -23,7 +23,13 @@ export const qaAuthState = {
     lastName: "Test",
     username: "qa.test",
     roles: [ROLES.QA],
-    permissions: getPermissionsFromRoles([ROLES.QA]),
+    permissions: [
+      PERMISSIONS.QA_DASHBOARD_READ,
+      PERMISSIONS.QA_TEST_CASES_READ,
+      PERMISSIONS.QA_TEST_CASES_CREATE,
+      PERMISSIONS.QA_TEST_CASES_UPDATE,
+      PERMISSIONS.VULNERABILITIES_READ,
+    ],
   },
 };
 
@@ -36,7 +42,17 @@ export const securityProjectManagerAuthState = {
     lastName: "Test",
     username: "security.manager.test",
     roles: [ROLES.SECURITY_PROJECT_MANAGER],
-    permissions: getPermissionsFromRoles([ROLES.SECURITY_PROJECT_MANAGER]),
+    permissions: [
+      PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ,
+      PERMISSIONS.SECURITY_PROJECTS_READ,
+      PERMISSIONS.SECURITY_PROJECTS_ASSIGN,
+      PERMISSIONS.SECURITY_PROJECTS_ASSIGN_SELF,
+      PERMISSIONS.SECURITY_FINDINGS_REVIEW,
+      PERMISSIONS.SECURITY_FINDINGS_APPROVE,
+      PERMISSIONS.SECURITY_FINDINGS_REJECT,
+      PERMISSIONS.SECURITY_REPORTS_CREATE,
+      PERMISSIONS.SECURITY_REPORTS_SUBMIT_FOR_APPROVAL,
+    ],
   },
 };
 
@@ -49,6 +65,16 @@ export const qualityProjectManagerAuthState = {
     lastName: "Test",
     username: "quality.manager.test",
     roles: [ROLES.QUALITY_PROJECT_MANAGER],
-    permissions: getPermissionsFromRoles([ROLES.QUALITY_PROJECT_MANAGER]),
+    permissions: [
+      PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ,
+      PERMISSIONS.QUALITY_PROJECTS_READ,
+      PERMISSIONS.QUALITY_PROJECTS_ASSIGN,
+      PERMISSIONS.QUALITY_PROJECTS_ASSIGN_SELF,
+      PERMISSIONS.QUALITY_RESULTS_REVIEW,
+      PERMISSIONS.QUALITY_RESULTS_APPROVE,
+      PERMISSIONS.QUALITY_RESULTS_REJECT,
+      PERMISSIONS.QUALITY_REPORTS_CREATE,
+      PERMISSIONS.QUALITY_REPORTS_SUBMIT_FOR_APPROVAL,
+    ],
   },
 };
