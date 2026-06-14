@@ -6,8 +6,8 @@ import {
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
 import { logout } from "@/features/auth/authSlice";
+import { API_BASE_URL } from "@/config/backend";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 const CSRF_TOKEN_URL = "/auth/csrf-token";
 const PUBLIC_AUTH_URLS = new Set(["/auth/login", "/auth/register", CSRF_TOKEN_URL]);
 let cachedCsrfToken: string | undefined;

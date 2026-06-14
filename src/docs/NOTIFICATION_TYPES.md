@@ -573,6 +573,19 @@ notification:mark_read
 notifications:mark_all_read
 ```
 
+The REST API and Socket.IO server use the same origin by default. Override this only
+when the socket server is hosted separately:
+
+```env
+VITE_API_BASE_URL=http://localhost:4000/api
+VITE_SOCKET_URL=http://localhost:4000
+VITE_SOCKET_PATH=/socket.io
+```
+
+For assignment notifications, the backend must join each authenticated socket to
+`user:{authenticatedUserId}` and emit `notification:new` to both the selected
+`projectManagerId` and `devopsManagerId` rooms after the project transaction succeeds.
+
 ## Backend Recommendations
 
 1. For user-specific notifications, set `userId`.

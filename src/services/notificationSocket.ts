@@ -1,4 +1,5 @@
 import { io, type Socket } from "socket.io-client";
+import { SOCKET_PATH, SOCKET_URL } from "@/config/backend";
 import type { AppNotification } from "@/types/notification";
 
 type NotificationSocketHandlers = {
@@ -16,11 +17,6 @@ type ConnectOptions = {
   userId: string;
   roles: string[];
 };
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-const SOCKET_URL =
-  import.meta.env.VITE_SOCKET_URL || API_BASE_URL.replace(/\/api\/?$/, "");
-const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH || "/socket.io";
 
 class NotificationSocket {
   private socket?: Socket;
@@ -76,6 +72,10 @@ class NotificationSocket {
 
   markAllRead() {
     this.socket?.emit("notifications:mark_all_read");
+  }
+
+  getConnectionConfig() {
+    return { url: SOCKET_URL, path: SOCKET_PATH };
   }
 
   disconnect() {

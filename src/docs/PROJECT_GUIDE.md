@@ -39,7 +39,8 @@ src/
     Sidebar.tsx               Drawer/sidebar navigation
     Navbar.tsx                Top navigation
     PermissionGate.tsx        Hide/show UI by permission
-    NotificationRealtimeBridge.tsx
+  hooks/
+    useNotifications.ts      REST and Socket.IO notification lifecycle
   config/
     appRoutes.ts              Protected route definitions
     sidebarItems.ts           Base sidebar item definitions
@@ -293,9 +294,9 @@ Initial notification fetch:
 
 - `src/services/notificationsApi.ts`
 
-Realtime bridge:
+REST and realtime lifecycle hook:
 
-- `src/components/NotificationRealtimeBridge.tsx`
+- `src/hooks/useNotifications.ts`
 
 Socket wrapper:
 
@@ -305,7 +306,7 @@ Flow:
 
 1. If authenticated, fetch notifications.
 2. Connect socket with `{ userId, roles }`.
-3. Dispatch socket events into Redux.
+3. `useNotifications` dispatches socket events into Redux and exposes notification actions.
 4. Show toast for high/critical notifications.
 5. Disconnect and clear notifications on logout.
 

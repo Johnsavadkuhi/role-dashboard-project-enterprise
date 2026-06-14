@@ -11,17 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import {
-  allNotificationsMarkedRead,
-  notificationMarkedRead,
-} from "@/features/notifications/notificationsSlice";
 import { useNotifications } from "@/hooks/useNotifications";
-import { notificationSocket } from "@/services/notificationSocket";
-import {
-  useMarkAllNotificationsReadMutation,
-  useMarkNotificationReadMutation,
-} from "@/services/notificationsApi";
 import { useLanguage } from "@/i18n";
 import type { AppNotification, NotificationPriority } from "@/types/notification";
 import Button from "@/components/ui/Button";
@@ -70,16 +60,18 @@ const formatTime = (value: string) => {
   }).format(date);
 };
 
-function NotificationItem({ notification }: { notification: AppNotification }) {
-  const dispatch = useDispatch();
+function NotificationItem({
+  notification,
+  onMarkRead,
+}: {
+  notification: AppNotification;
+  onMarkRead: (id: string) => Promise<unknown>;
+}) {
   const { t } = useLanguage();
-  const [markRead] = useMarkNotificationReadMutation();
 
   const handleMarkRead = async () => {
-    dispatch(notificationMarkedRead(notification.id));
-    notificationSocket.markRead(notification.id);
     try {
-      await markRead(notification.id).unwrap();
+      await onMarkRead(notification.id);
     } catch {
       // Realtime state remains optimistic; the next server sync will reconcile failures.
     }
@@ -133,16 +125,19 @@ function NotificationItem({ notification }: { notification: AppNotification }) {
 }
 
 export default function NotificationCenter() {
-  const dispatch = useDispatch();
   const { t } = useLanguage();
-  const { connectionStatus, notifications, unreadCount } = useNotifications();
-  const [markAllRead, { isLoading }] = useMarkAllNotificationsReadMutation();
+  const {
+    connectionStatus,
+    notifications,
+    unreadCount,
+    isMarkingAllRead,
+    markAllRead,
+    markRead,
+  } = useNotifications();
 
   const handleMarkAllRead = async () => {
-    dispatch(allNotificationsMarkedRead());
-    notificationSocket.markAllRead();
     try {
-      await markAllRead().unwrap();
+      await markAllRead();
     } catch {
       // Realtime state remains optimistic; the next server sync will reconcile failures.
     }
@@ -195,7 +190,7 @@ export default function NotificationCenter() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  isLoading={isLoading}
+                  isLoading={isMarkingAllRead}
                   onClick={handleMarkAllRead}
                 >
                   {t("notifications.markAllRead")}
@@ -214,7 +209,11 @@ export default function NotificationCenter() {
               ) : (
                 <Box maxH="480px" overflowY="auto">
                   {notifications.map((notification) => (
-                    <NotificationItem key={notification.id} notification={notification} />
+                    <NotificationItem
+                      key={notification.id}
+                      notification={notification}
+                      onMarkRead={markRead}
+                    />
                   ))}
                 </Box>
               )}
