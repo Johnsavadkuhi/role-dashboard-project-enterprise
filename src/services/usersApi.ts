@@ -51,7 +51,7 @@ export const usersApi = api.injectEndpoints({
     updateUser: builder.mutation<User, UserFormPayload & { id: string }>({
       query: ({ id, ...data }) => ({ url: `/users/${id}`, method: "PUT", body: data }),
       transformResponse: normalizeUserResponse,
-      invalidatesTags: ["Users"],
+      invalidatesTags: ["Users", "Auth"],
     }),
     deleteUser: builder.mutation<{ success: boolean }, string>({
       query: (id) => ({ url: `/users/${id}`, method: "DELETE" }),

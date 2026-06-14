@@ -10,6 +10,7 @@ import { logout } from "@/features/auth/authSlice";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 const CSRF_TOKEN_URL = "/auth/csrf-token";
 const PUBLIC_AUTH_URLS = new Set(["/auth/login", "/auth/register", CSRF_TOKEN_URL]);
+let cachedCsrfToken: string | undefined;
 
 type CsrfTokenResponse = {
   success?: boolean;
@@ -44,6 +45,10 @@ const withCsrfToken = (args: string | FetchArgs, csrfToken: string): FetchArgs =
 };
 
 const fetchCsrfToken = async (api, extraOptions) => {
+  if (cachedCsrfToken) {
+    return { data: cachedCsrfToken };
+  }
+
   const result = await rawBaseQuery(CSRF_TOKEN_URL, api, extraOptions);
 
   if (result.error) {
@@ -62,6 +67,7 @@ const fetchCsrfToken = async (api, extraOptions) => {
     };
   }
 
+  cachedCsrfToken = csrfToken;
   return { data: csrfToken };
 };
 
@@ -80,7 +86,28 @@ const baseQueryWithCsrf: BaseQueryFn<
     return { error: csrfResult.error };
   }
 
-  return rawBaseQuery(withCsrfToken(args, csrfResult.data), api, extraOptions);
+  let result = await rawBaseQuery(
+    withCsrfToken(args, csrfResult.data),
+    api,
+    extraOptions
+  );
+
+  if (result.error?.status === 403) {
+    cachedCsrfToken = undefined;
+    const retryCsrfResult = await fetchCsrfToken(api, extraOptions);
+
+    if ("error" in retryCsrfResult) {
+      return { error: retryCsrfResult.error };
+    }
+
+    result = await rawBaseQuery(
+      withCsrfToken(args, retryCsrfResult.data),
+      api,
+      extraOptions
+    );
+  }
+
+  return result;
 };
 
 const baseQueryWithReauth: BaseQueryFn<
@@ -103,6 +130,7 @@ const baseQueryWithReauth: BaseQueryFn<
     if (!refreshResult.error) {
       result = await baseQueryWithCsrf(args, api, extraOptions);
     } else {
+      cachedCsrfToken = undefined;
       api.dispatch(logout());
     }
   }

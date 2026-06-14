@@ -75,7 +75,7 @@ describe("Login page", () => {
     expect(await screen.findByText("Pentester Page")).toBeInTheDocument();
   });
 
-  it("derives admin wildcard when the auth response omits permissions", async () => {
+  it("keeps omitted permissions empty and redirects to profile", async () => {
     server.use(
       http.post(`${apiUrl}/auth/login`, () =>
         HttpResponse.json({
@@ -101,6 +101,7 @@ describe("Login page", () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<div>Admin Page</div>} />
+        <Route path="/profile" element={<div>Profile Page</div>} />
       </Routes>,
       { route: "/login" }
     );
@@ -108,6 +109,6 @@ describe("Login page", () => {
     await user.type(screen.getByLabelText("Username"), "admin");
     await user.type(screen.getByLabelText("Password"), "password123");
     await user.click(screen.getByRole("button", { name: "Login" }));
-    expect(await screen.findByText("Admin Page")).toBeInTheDocument();
+    expect(await screen.findByText("Profile Page")).toBeInTheDocument();
   });
 });

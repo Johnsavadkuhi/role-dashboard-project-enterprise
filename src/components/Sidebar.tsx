@@ -53,42 +53,35 @@ const roleFeatureSections: Array<{
   },
   {
     icon: "shield",
-    permission: PERMISSIONS.SECURITY_MANAGER_DASHBOARD_READ,
+    permission: PERMISSIONS.SECURITY_PROJECTS_READ,
     role: ROLES.SECURITY_PROJECT_MANAGER,
     section: "Security Manager",
     sectionKey: "sidebar.roleSecurityManager",
   },
   {
     icon: "target",
-    permission: PERMISSIONS.PENTEST_DASHBOARD_READ,
+    permission: PERMISSIONS.PENTESTER_PROJECT_READ,
     role: ROLES.PENTESTER,
     section: "Pentester",
     sectionKey: "sidebar.rolePentester",
   },
   {
     icon: "server",
-    permission: PERMISSIONS.DEVOPS_DASHBOARD_READ,
+    permission: PERMISSIONS.DEVOPS_PROJECT_READ,
     role: ROLES.DEVOPS,
     section: "DevOps",
     sectionKey: "sidebar.roleDevops",
   },
   {
-    icon: "briefcase",
-    permission: PERMISSIONS.REPRESENTATIVE_DASHBOARD_READ,
-    role: ROLES.REPRESENTATIVE,
-    section: "Representative",
-    sectionKey: "sidebar.roleRepresentative",
-  },
-  {
     icon: "clipboard",
-    permission: PERMISSIONS.QUALITY_MANAGER_DASHBOARD_READ,
+    permission: PERMISSIONS.QUALITY_PROJECTS_READ,
     role: ROLES.QUALITY_PROJECT_MANAGER,
     section: "Quality Manager",
     sectionKey: "sidebar.roleQualityManager",
   },
   {
     icon: "check",
-    permission: PERMISSIONS.QA_DASHBOARD_READ,
+    permission: PERMISSIONS.QA_PROJECT_READ,
     role: ROLES.QA,
     section: "Quality Assurance",
     sectionKey: "sidebar.roleQa",
@@ -309,15 +302,19 @@ export default function Sidebar() {
   const { drawerOpen, sidebarOpen } = useSelector((state: RootState) => state.ui);
   const { hasAnyPermission, permissions, roles } = usePermission();
   const { t } = useLanguage();
-  const primaryDashboardItem: SidebarItem = {
-    icon: "layout",
-    title: "Dashboard",
-    titleKey: "sidebar.dashboard",
-    path: getDashboardPathByRoles(roles, permissions),
-    permissions: [],
-    section: "Dashboards",
-    sectionKey: "sidebar.dashboards",
-  };
+  const primaryDashboardPath = getDashboardPathByRoles(roles, permissions);
+  const primaryDashboardItem: SidebarItem | null =
+    primaryDashboardPath === "/profile"
+      ? null
+      : {
+          icon: "layout",
+          title: "Dashboard",
+          titleKey: "sidebar.dashboard",
+          path: primaryDashboardPath,
+          permissions: [],
+          section: "Dashboards",
+          sectionKey: "sidebar.dashboards",
+        };
   const featureItems = sidebarItems.filter((item) => {
     if (item.section === "Dashboards") return false;
     if (item.section === "Workspace" && item.path === "/projects") return false;
@@ -345,7 +342,7 @@ export default function Sidebar() {
       sectionKey: section.sectionKey,
     }));
   const sections = groupItems([
-    primaryDashboardItem,
+    ...(primaryDashboardItem ? [primaryDashboardItem] : []),
     ...featureItems,
     ...roleFeatureItems,
   ]);

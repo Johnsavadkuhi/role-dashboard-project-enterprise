@@ -17,6 +17,7 @@ export const mockRoleCatalog: RoleCatalogItem[] = [
     name: "Pentester",
     permissions: [
       PERMISSIONS.PENTEST_DASHBOARD_READ,
+      PERMISSIONS.PENTESTER_PROJECT_READ,
       PERMISSIONS.VULNERABILITIES_READ,
       PERMISSIONS.VULNERABILITIES_CREATE,
       PERMISSIONS.VULNERABILITIES_UPDATE,
@@ -51,6 +52,7 @@ export const mockRoleCatalog: RoleCatalogItem[] = [
     name: "DevOps",
     permissions: [
       PERMISSIONS.DEVOPS_DASHBOARD_READ,
+      PERMISSIONS.DEVOPS_PROJECT_READ,
       PERMISSIONS.DEPLOYMENTS_READ,
       PERMISSIONS.DEPLOYMENTS_CREATE,
       PERMISSIONS.SERVERS_READ,
@@ -75,6 +77,7 @@ export const mockRoleCatalog: RoleCatalogItem[] = [
     name: "Quality Assurance",
     permissions: [
       PERMISSIONS.QA_DASHBOARD_READ,
+      PERMISSIONS.QA_PROJECT_READ,
       PERMISSIONS.QA_TEST_CASES_READ,
       PERMISSIONS.QA_TEST_CASES_CREATE,
       PERMISSIONS.QA_TEST_CASES_UPDATE,

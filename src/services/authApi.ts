@@ -23,13 +23,39 @@ type BackendUser = Partial<User> & {
 
 type BackendAuthResponse = {
   success?: boolean;
-  data?: {
-    user?: BackendUser;
-    csrfToken?: string;
-  };
+  data?: BackendUser | { user?: BackendUser; csrfToken?: string };
   user?: BackendUser;
   csrfToken?: string;
 };
+
+function isBackendUser(value: unknown): value is BackendUser {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as BackendUser;
+  return Boolean(
+    candidate.id ||
+    candidate.name ||
+    candidate.username ||
+    Array.isArray(candidate.roles) ||
+    Array.isArray(candidate.permissions)
+  );
+}
+
+function getUserFromAuthResponse(response: BackendAuthResponse): BackendUser | undefined {
+  const data = response.data;
+
+  if (response.user) return response.user;
+  if (isBackendUser(data)) return data;
+  if (data && "user" in data && data.user) return data.user;
+
+  return undefined;
+}
+
+function getCsrfTokenFromAuthResponse(response: BackendAuthResponse) {
+  const data = response.data;
+
+  if (data && "csrfToken" in data && data.csrfToken) return data.csrfToken;
+  return response.csrfToken;
+}
 
 const normalizeAuthUser = (user: BackendUser): User => {
   const displayName =
@@ -51,7 +77,7 @@ const normalizeAuthUser = (user: BackendUser): User => {
 
 const normalizeMeResponse = (response: BackendUser | BackendAuthResponse): User => {
   const authResponse = response as BackendAuthResponse;
-  const user = authResponse.data?.user || authResponse.user;
+  const user = getUserFromAuthResponse(authResponse);
 
   if (
     authResponse.data ||
@@ -69,7 +95,7 @@ const normalizeMeResponse = (response: BackendUser | BackendAuthResponse): User 
 };
 
 const normalizeAuthResponse = (response: BackendAuthResponse): AuthResponse => {
-  const user = response.data?.user || response.user;
+  const user = getUserFromAuthResponse(response);
 
   if (!user) {
     throw new Error("Auth response did not include a user");
@@ -77,7 +103,7 @@ const normalizeAuthResponse = (response: BackendAuthResponse): AuthResponse => {
 
   return {
     user: normalizeAuthUser(user),
-    csrfToken: response.data?.csrfToken || response.csrfToken,
+    csrfToken: getCsrfTokenFromAuthResponse(response),
   };
 };
 

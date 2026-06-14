@@ -38,7 +38,7 @@ export default function AdminUsers() {
         <div>
           <Heading>User Management</Heading>
           <Text color="gray.600" mt={2}>
-            Manage users, role assignments, direct permissions, and account states.
+            Manage users, role assignments, permissions, and account states.
           </Text>
         </div>
       </HStack>

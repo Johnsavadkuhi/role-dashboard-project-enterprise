@@ -1,4 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import authReducer from "@/features/auth/authSlice";
 import notificationsReducer from "@/features/notifications/notificationsSlice";
 import uiReducer from "@/features/ui/uiSlice";
@@ -20,6 +21,7 @@ export function setupStore(preloadedState?: Partial<RootState>) {
 }
 
 export const store = setupStore();
+setupListeners(store.dispatch);
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof setupStore>;
 export type AppDispatch = AppStore["dispatch"];

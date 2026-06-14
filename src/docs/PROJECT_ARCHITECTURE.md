@@ -211,7 +211,7 @@ The admin can:
 - Select a user.
 - Toggle roles.
 - Auto-fill permissions from selected roles.
-- Manually fine-tune direct permissions.
+- Manually fine-tune the saved user permissions.
 - Save updated access through RTK Query.
 
 The UI uses:

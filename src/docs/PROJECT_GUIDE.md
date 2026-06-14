@@ -127,7 +127,7 @@ Login page:
 1. User submits username/password in `src/pages/public/Login.tsx`.
 2. `useLoginUserMutation()` calls `POST /auth/login`.
 3. `authApi.ts` normalizes the response into `{ user, csrfToken? }`.
-4. If `user.permissions` is empty or missing, login fetches `/users/roles` and derives effective permissions from the backend role catalog.
+4. The login response `user.permissions` array is used as the effective permission list.
 5. `loginSuccess(payload)` stores the normalized user in Redux and localStorage.
 6. The user is redirected with `getDashboardPathByRoles(...)`.
 
@@ -140,7 +140,7 @@ Auth state:
 Reading auth:
 
 - `useAuth.ts` reads Redux auth state.
-- If the user has roles but no permissions, it uses `/users/roles` to derive effective permissions.
+- It does not derive logged-in user permissions from roles. `user.permissions` is the source of truth.
 - It returns:
   - `user`
   - `isAuthenticated`
@@ -270,25 +270,18 @@ Current save payload:
 }
 ```
 
-Backend recommendation for per-user custom access:
+Backend access model:
 
 ```ts
-permissionOverrides: {
-  allow: string[],
-  deny: string[]
-}
+roles: string[]
+permissions: string[]
 ```
 
-The long-term clean model is:
+The saved `permissions` array is the effective permission list for that user. The frontend should not rebuild the logged-in user's permissions from roles when the backend returns an empty list.
 
 ```txt
-effectivePermissions =
-  rolePermissions
-  + permissionOverrides.allow
-  - permissionOverrides.deny
+effectivePermissions = user.permissions
 ```
-
-So if admin removes a permission that normally comes from a role, store it in `permissionOverrides.deny`. If admin adds an extra permission outside the user's roles, store it in `permissionOverrides.allow`.
 
 ## Notifications
 

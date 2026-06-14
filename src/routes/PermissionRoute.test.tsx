@@ -95,6 +95,35 @@ describe("route guards", () => {
     expect(screen.getByText("Unauthorized")).toBeInTheDocument();
   });
 
+  it("blocks project pages when a role is missing its project read permission", () => {
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={<PermissionRoute permissions={[PERMISSIONS.PENTESTER_PROJECT_READ]} />}
+        >
+          <Route path="/projects" element={<div>Projects Page</div>} />
+        </Route>
+        <Route path="/unauthorized" element={<div>Unauthorized</div>} />
+      </Routes>,
+      {
+        route: "/projects",
+        preloadedState: {
+          auth: {
+            isAuthenticated: true,
+            user: {
+              id: "pentester-without-project-read",
+              name: "Pentester Without Project Read",
+              username: "pentester.no.project",
+              roles: [ROLES.PENTESTER],
+              permissions: [PERMISSIONS.PENTEST_DASHBOARD_READ],
+            },
+          },
+        },
+      }
+    );
+    expect(screen.getByText("Unauthorized")).toBeInTheDocument();
+  });
+
   it("redirects authenticated users away from public routes", () => {
     renderWithProviders(
       <Routes>
@@ -146,7 +175,7 @@ describe("permission UI", () => {
     expect(screen.queryByText("Security Manager Dashboard")).not.toBeInTheDocument();
   });
 
-  it("Sidebar derives admin drawer links when permissions are empty", async () => {
+  it("Sidebar does not derive admin drawer links when permissions are empty", () => {
     renderWithProviders(<Sidebar />, {
       preloadedState: {
         auth: {
@@ -163,9 +192,54 @@ describe("permission UI", () => {
       },
     });
 
-    expect(await screen.findByText("User Management")).toBeInTheDocument();
-    expect(await screen.findByText("Create Project")).toBeInTheDocument();
-    expect(await screen.findByText("Projects")).toBeInTheDocument();
+    expect(screen.queryByText("User Management")).not.toBeInTheDocument();
+    expect(screen.queryByText("Create Project")).not.toBeInTheDocument();
+    expect(screen.queryByText("Projects")).not.toBeInTheDocument();
+  });
+
+  it("Sidebar shows pentester project link when project read permission is restored", () => {
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: {
+          isAuthenticated: true,
+          user: {
+            id: "pentester-with-project-read",
+            name: "Pentester With Project Read",
+            username: "pentester.project",
+            roles: [ROLES.PENTESTER],
+            permissions: [
+              PERMISSIONS.PENTEST_DASHBOARD_READ,
+              PERMISSIONS.PENTESTER_PROJECT_READ,
+            ],
+          },
+        },
+        ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
+      },
+    });
+
+    expect(screen.getByText("Pentester")).toBeInTheDocument();
+    expect(screen.getByText("Projects")).toBeInTheDocument();
+  });
+
+  it("Sidebar hides dashboard when the user's dashboard permission is removed", () => {
+    renderWithProviders(<Sidebar />, {
+      preloadedState: {
+        auth: {
+          isAuthenticated: true,
+          user: {
+            id: "pentester-without-dashboard-read",
+            name: "Pentester Without Dashboard Read",
+            username: "pentester.no.dashboard",
+            roles: [ROLES.PENTESTER],
+            permissions: [PERMISSIONS.PENTESTER_PROJECT_READ],
+          },
+        },
+        ui: { sidebarOpen: true, drawerOpen: false, theme: "light" },
+      },
+    });
+
+    expect(screen.queryByText("Dashboard")).not.toBeInTheDocument();
+    expect(screen.getByText("Projects")).toBeInTheDocument();
   });
 
   it("Sidebar groups features by assigned roles for multi-role users", () => {

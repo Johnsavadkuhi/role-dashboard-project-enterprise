@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 import {
   Badge as ChakraBadge,
   Box,
@@ -14,6 +15,8 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { useLanguage } from "@/i18n";
+import { updateUser as updateAuthUser } from "@/features/auth/authSlice";
+import { useAuth } from "@/hooks/useAuth";
 import {
   useGetRolesAndPermissionsQuery,
   useUpdateUserMutation,
@@ -72,7 +75,9 @@ function RolePermissionEditor({
   selectedUser: User | undefined;
   onSelectUser: (userId: string) => void;
 }) {
+  const dispatch = useDispatch();
   const { t } = useLanguage();
+  const { user: currentUser } = useAuth();
   const {
     data: rolesAndPermissions,
     error: rolesError,
@@ -131,6 +136,9 @@ function RolePermissionEditor({
         permissions: draftPermissions,
         status: draftStatus,
       }).unwrap();
+      if (currentUser?.id === updatedUser.id) {
+        dispatch(updateAuthUser(updatedUser));
+      }
       setDraftRoles(updatedUser.roles || draftRoles);
       setDraftPermissions(updatedUser.permissions || draftPermissions);
       setDraftStatus(updatedUser.status || draftStatus);

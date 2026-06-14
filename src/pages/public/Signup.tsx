@@ -7,10 +7,8 @@ import toast from "react-hot-toast";
 import { Box, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { useRegisterUserMutation } from "@/services/authApi";
-import { useLazyGetRolesAndPermissionsQuery } from "@/services/usersApi";
 import { useUploadFileMutation } from "@/services/uploadApi";
 import { getDashboardPathByRoles } from "@/utils/dashboard";
-import { getEffectivePermissions } from "@/utils/permissionGrants";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
@@ -45,7 +43,6 @@ export default function Signup() {
   const navigate = useNavigate();
   const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
   const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
-  const [getRolesAndPermissions] = useLazyGetRolesAndPermissionsQuery();
 
   const {
     register,
@@ -70,23 +67,9 @@ export default function Signup() {
         avatarFileId: uploadResponse.fileId,
       }).unwrap();
 
-      const rolesAndPermissions = response.user.permissions.length
-        ? undefined
-        : await getRolesAndPermissions()
-            .unwrap()
-            .catch(() => undefined);
-      const user = {
-        ...response.user,
-        permissions: getEffectivePermissions(
-          response.user.roles,
-          response.user.permissions,
-          rolesAndPermissions?.roles
-        ),
-      };
-
-      dispatch(loginSuccess({ ...response, user }));
+      dispatch(loginSuccess(response));
       toast.success("Account created successfully");
-      navigate(getDashboardPathByRoles(user.roles, user.permissions));
+      navigate(getDashboardPathByRoles(response.user.roles, response.user.permissions));
     } catch (error: any) {
       toast.error(error?.data?.message || "Signup failed");
     }

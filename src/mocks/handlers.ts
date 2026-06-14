@@ -14,6 +14,7 @@ import type { User } from "@/types";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 const endpoint = (path: string) => `${apiUrl}${path}`;
+let authenticatedUserId = mockUsers[0]?.id;
 
 export const handlers = [
   http.post(endpoint("/auth/login"), async ({ request }) => {
@@ -38,6 +39,7 @@ export const handlers = [
         permissions: [PERMISSIONS.ADMIN_ALL],
       };
 
+    authenticatedUserId = user.id;
     return HttpResponse.json({ user });
   }),
 
@@ -64,6 +66,7 @@ export const handlers = [
       avatarUrl: body.avatarUrl,
     };
     upsertMockUser(user);
+    authenticatedUserId = user.id;
     return HttpResponse.json({ user }, { status: 201 });
   }),
 
@@ -81,10 +84,12 @@ export const handlers = [
   }),
 
   http.get(endpoint("/auth/me"), () => {
-    return HttpResponse.json(mockUsers[0]);
+    const user = mockUsers.find((item) => item.id === authenticatedUserId);
+    return HttpResponse.json(user || mockUsers[0]);
   }),
 
   http.post(endpoint("/auth/logout"), () => {
+    authenticatedUserId = undefined;
     return HttpResponse.json({ success: true });
   }),
 
