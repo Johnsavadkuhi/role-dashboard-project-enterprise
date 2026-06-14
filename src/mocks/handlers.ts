@@ -11,6 +11,7 @@ import {
   upsertMockUser,
 } from "@/mocks/data";
 import type { User } from "@/types";
+import type { CreateProjectRequest } from "@/types/api/projects";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 const endpoint = (path: string) => `${apiUrl}${path}`;
@@ -130,6 +131,34 @@ export const handlers = [
       url: "https://placehold.co/256x256?text=Avatar",
       fileId: crypto.randomUUID(),
     });
+  }),
+
+  http.post(endpoint("/projects"), async ({ request }) => {
+    const user = mockUsers.find((item) => item.id === authenticatedUserId);
+    const isAdmin = user?.roles.includes(ROLES.ADMIN);
+    const canCreate = user?.permissions.some(
+      (permission) =>
+        permission === PERMISSIONS.ADMIN_ALL || permission === PERMISSIONS.PROJECTS_CREATE
+    );
+
+    if (!isAdmin || !canCreate) {
+      return HttpResponse.json(
+        { message: "Project creation is restricted to admins" },
+        { status: 403 }
+      );
+    }
+
+    const body = (await request.json()) as CreateProjectRequest;
+    return HttpResponse.json(
+      {
+        project: {
+          ...body,
+          id: crypto.randomUUID(),
+          createdAt: new Date().toISOString(),
+        },
+      },
+      { status: 201 }
+    );
   }),
 
   http.get(endpoint("/notifications"), () =>

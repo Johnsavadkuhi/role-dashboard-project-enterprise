@@ -150,7 +150,7 @@ export let mockUsers: User[] = [
     username: "devops.user",
     roles: [ROLES.DEVOPS],
     permissions: getMockPermissionsFromRoles([ROLES.DEVOPS]),
-    status: "Inactive",
+    status: "Active",
     avatarUrl: "https://placehold.co/128x128?text=DU",
   },
   {

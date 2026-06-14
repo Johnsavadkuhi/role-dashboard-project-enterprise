@@ -7,6 +7,7 @@ import LogoutButton from "@/components/LogoutButton";
 import NotificationCenter from "@/components/NotificationCenter";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ export default function Navbar() {
         </Box>
       </HStack>
       <HStack gap={3}>
-        {/* <LanguageSwitcher /> */}
+        <LanguageSwitcher />
         <NotificationCenter />
         <LogoutButton />
       </HStack>

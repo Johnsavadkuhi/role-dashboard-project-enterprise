@@ -80,6 +80,40 @@ describe("route guards", () => {
     expect(screen.getByText("Unauthorized")).toBeInTheDocument();
   });
 
+  it("blocks project creation when permission exists without the admin role", () => {
+    renderWithProviders(
+      <Routes>
+        <Route
+          element={
+            <PermissionRoute
+              permissions={[PERMISSIONS.PROJECTS_CREATE]}
+              roles={[ROLES.ADMIN]}
+            />
+          }
+        >
+          <Route path="/projects/create" element={<div>Create Project Page</div>} />
+        </Route>
+        <Route path="/unauthorized" element={<div>Unauthorized</div>} />
+      </Routes>,
+      {
+        route: "/projects/create",
+        preloadedState: {
+          auth: {
+            isAuthenticated: true,
+            user: {
+              id: "qa-project-creator",
+              name: "QA Project Creator",
+              roles: [ROLES.QA],
+              permissions: [PERMISSIONS.PROJECTS_CREATE],
+            },
+          },
+        },
+      }
+    );
+
+    expect(screen.getByText("Unauthorized")).toBeInTheDocument();
+  });
+
   it("blocks users without required permission", () => {
     renderWithProviders(
       <Routes>

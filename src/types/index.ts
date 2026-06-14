@@ -1,5 +1,13 @@
 import { ROLES } from "@/constants/roles";
 
+export type {
+  CertificateAuthority,
+  CreateProjectRequest,
+  CreateProjectResponse,
+  ProjectPlatform,
+  ProjectType,
+} from "@/types/api/projects";
+
 export type Role = (typeof ROLES)[keyof typeof ROLES];
 export type Permission = string;
 export type UserStatus = "Active" | "Inactive";

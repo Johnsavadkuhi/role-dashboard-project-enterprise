@@ -86,6 +86,7 @@ export const protectedRouteConfig = [
     path: "/projects/create",
     element: CreateProject,
     permissions: [PERMISSIONS.PROJECTS_CREATE],
+    roles: [ROLES.ADMIN],
   },
   { path: "/profile", element: Profile, permissions: [] },
   { path: "/settings", element: Settings, permissions: [] },
