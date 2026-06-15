@@ -63,29 +63,26 @@ export default function LanguageSwitcher() {
       <Menu.Trigger asChild>
         <Button
           aria-label={`${t("common.language")}: ${t(`languages.${language}`)}`}
-          bg="white"
-          borderColor="gray.200"
+          bg="transparent"
+          border="none"
           borderRadius="xl"
-          borderWidth="1px"
-          boxShadow="0 1px 2px rgba(15, 23, 42, 0.04)"
           color="gray.700"
           h="44px"
           minW={{ base: "44px", sm: "168px" }}
           px={{ base: 0, sm: 2.5 }}
           transition="all 0.2s ease"
-          variant="outline"
+          variant="ghost"
           _hover={{
-            bg: "blue.50",
-            borderColor: "blue.200",
-            boxShadow: "0 4px 12px rgba(37, 99, 235, 0.10)",
+            bg: "transparent",
             color: "blue.700",
+            transform: "scale(1.02)",
           }}
           _open={{
-            bg: "blue.50",
-            borderColor: "blue.300",
-            boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.12)",
+            bg: "transparent",
             color: "blue.700",
+            transform: "scale(1.02)",
           }}
+          _focusVisible={{ boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.25)" }}
         >
           <Flex align="center" gap={2.5} w="full">
             <Flex
