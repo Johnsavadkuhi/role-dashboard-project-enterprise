@@ -54,8 +54,8 @@ export default function LanguageSwitcher() {
           borderRadius="xl"
           color="gray.700"
           h="44px"
-          minW={{ base: "44px", sm: "168px" }}
-          px={{ base: 0, sm: 2.5 }}
+          minW={{ base: "44px", sm: "auto" }}
+          px={{ base: 0, sm: 1.5 }}
           transition="all 0.2s ease"
           variant="ghost"
           _hover={{
@@ -70,7 +70,7 @@ export default function LanguageSwitcher() {
           }}
           _focusVisible={{ boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.25)" }}
         >
-          <Flex align="center" gap={2.5} w="full">
+          <Flex align="center" gap={2}>
             <Flex
               align="center"
               bg="blue.50"
@@ -84,12 +84,7 @@ export default function LanguageSwitcher() {
               <GlobeIcon />
             </Flex>
 
-            <Box
-              display={{ base: "none", sm: "block" }}
-              flex="1"
-              minW={0}
-              textAlign="start"
-            >
+            <Box display={{ base: "none", sm: "block" }} textAlign="start">
               <Text
                 color="gray.500"
                 fontSize="10px"
@@ -104,7 +99,7 @@ export default function LanguageSwitcher() {
                 fontSize="sm"
                 fontWeight="700"
                 lineHeight="1"
-                truncate
+                whiteSpace="nowrap"
               >
                 {t(`languages.${language}`)}
               </Text>

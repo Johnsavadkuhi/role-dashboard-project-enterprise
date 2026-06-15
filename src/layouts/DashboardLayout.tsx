@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 export default function DashboardLayout() {
   return (
     <Flex minH="100vh" direction={{ base: "column", md: "row" }} bg="gray.50">
-      <AuthSessionSync />
+      {/* <AuthSessionSync /> */}
       <Sidebar />
       <Box flex="1" minW={0}>
         <Navbar />
