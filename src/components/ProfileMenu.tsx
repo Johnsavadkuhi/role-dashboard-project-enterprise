@@ -7,20 +7,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/i18n";
 import { useLogoutUserMutation } from "@/services/authApi";
 
-function ChevronIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
-      <path
-        d="m7 10 5 5 5-5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
 function ProfileIcon() {
   return (
     <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
@@ -102,8 +88,8 @@ export default function ProfileMenu() {
           borderWidth="1px"
           boxShadow="0 1px 2px rgba(15, 23, 42, 0.04)"
           h="46px"
-          minW={{ base: "46px", lg: "184px" }}
-          p={{ base: 0, lg: 1.5 }}
+          minW="46px"
+          p={0}
           transition="all 0.2s ease"
           variant="outline"
           _hover={{
@@ -117,50 +103,10 @@ export default function ProfileMenu() {
             boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.12)",
           }}
         >
-          <Flex align="center" gap={2.5} w="full">
-            <Box flexShrink={0} position="relative">
-              <Avatar.Root colorPalette="blue" size="sm">
-                <Avatar.Fallback name={displayName} fontWeight="800" />
-                <Avatar.Image src={user?.avatarUrl} alt={displayName} />
-              </Avatar.Root>
-              <Box
-                aria-hidden="true"
-                bg="green.500"
-                borderColor="white"
-                borderRadius="full"
-                borderWidth="2px"
-                bottom="-1px"
-                h="10px"
-                position="absolute"
-                right="-1px"
-                w="10px"
-              />
-            </Box>
-
-            <Box
-              display={{ base: "none", lg: "block" }}
-              flex="1"
-              minW={0}
-              textAlign="start"
-            >
-              <Text
-                color="gray.800"
-                fontSize="sm"
-                fontWeight="800"
-                lineHeight="1.2"
-                truncate
-              >
-                {displayName}
-              </Text>
-              <Text color="gray.500" fontSize="xs" fontWeight="600" mt={0.5} truncate>
-                {accountLabel}
-              </Text>
-            </Box>
-
-            <Box color="gray.400" display={{ base: "none", lg: "block" }} flexShrink={0}>
-              <ChevronIcon />
-            </Box>
-          </Flex>
+          <Avatar.Root colorPalette="blue" size="sm">
+            <Avatar.Fallback name={displayName} fontWeight="800" />
+            <Avatar.Image src={user?.avatarUrl} alt={displayName} />
+          </Avatar.Root>
         </Button>
       </Menu.Trigger>
 
