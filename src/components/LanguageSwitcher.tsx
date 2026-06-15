@@ -25,20 +25,6 @@ function GlobeIcon() {
   );
 }
 
-function ChevronIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
-      <path
-        d="m7 10 5 5 5-5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
-
 function CheckIcon() {
   return (
     <svg aria-hidden="true" fill="none" height="14" viewBox="0 0 24 24" width="14">
@@ -122,10 +108,6 @@ export default function LanguageSwitcher() {
               >
                 {t(`languages.${language}`)}
               </Text>
-            </Box>
-
-            <Box color="gray.400" display={{ base: "none", sm: "block" }} flexShrink={0}>
-              <ChevronIcon />
             </Box>
           </Flex>
         </Button>
